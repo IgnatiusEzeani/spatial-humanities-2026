@@ -12,6 +12,7 @@ from spatio_textual.gold import load_gold_jsonl, validate_gold_records
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 BUILDER = PROJECT_ROOT / "benchmarks" / "build_holdout_v1.py"
 EXPECTED_SHA256 = "fcd985d1727bb924d1b01a91166a1f792f7e15cf2ebf6f126d85eff1ac195453"
+PRE_MIGRATION_SHA256 = "be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b"
 TEACHING_REFERENCE = PROJECT_ROOT / "workshop" / "data" / "gold_reference_v0.1.jsonl"
 
 
@@ -47,6 +48,13 @@ def test_holdout_is_disjoint_from_teaching_development_examples(tmp_path):
     holdout_ids = {row["example_id"] for row in holdout}
     teaching_ids = {row["example_id"] for row in teaching}
     assert holdout_ids.isdisjoint(teaching_ids)
+
+
+def test_live_workflows_use_the_post_migration_holdout_checksum():
+    workflows = PROJECT_ROOT / ".github" / "workflows"
+    text = "\n".join(path.read_text(encoding="utf-8") for path in workflows.glob("*.yml"))
+    assert PRE_MIGRATION_SHA256 not in text
+    assert EXPECTED_SHA256 in text
 
 
 def test_holdout_has_expected_methodological_coverage(tmp_path):

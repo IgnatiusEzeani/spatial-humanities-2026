@@ -12,9 +12,9 @@ from dataclasses import dataclass
 
 
 WORKSHOP_REPO = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
-WORKSHOP_REF = "sh2026-workshop-v1.0.0"
+WORKSHOP_REF = "main"
 PACKAGE_VERSION = "0.4.0"
-PACKAGE_REF = "v0.4.0"
+PACKAGE_REF = "d91d32977924f2cf6fc826b01a77463f8c30267a"
 COLAB_ROOT = pathlib.Path("/content")
 
 
@@ -80,7 +80,7 @@ def _install(project: pathlib.Path, extras: str) -> None:
 
 
 def setup(*, fast_mode: bool = True, extras: str = "", quiet: bool = False) -> Context:
-    """Prepare one stable workshop checkout and a tagged package dependency."""
+    """Prepare one workshop checkout and an exactly pinned package dependency."""
     started = time.perf_counter()
     root = COLAB_ROOT if _in_colab() else pathlib.Path.cwd()
     project = _find_project()

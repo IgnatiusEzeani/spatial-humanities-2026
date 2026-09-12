@@ -203,19 +203,19 @@ The workshop core and the heavyweight teaching fallback package are structurally
 
 ## Open and test in Colab
 
-These buttons open the current rehearsal branch. Start with a fresh Colab runtime; the setup cells clone `fix/sh2026-demo-release-gates`. An existing checkout is reused, so restart with a fresh runtime when testing a new candidate. No API key is needed for the default path.
+These buttons open the current standalone release candidate on `main`. Start with a fresh Colab runtime. An existing checkout is reused, so restart with a fresh runtime when testing a new candidate. The package dependency is pinned to the exact commit reviewed in `spatio-textual` PR #4; no API key is needed for the default path.
 
 | Notebook | Open |
 |---|---|
-| 00 setup and orientation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/00_setup_and_orientation.ipynb) |
-| 01 manual annotation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/01_manual_annotation.ipynb) |
-| 02 rules and gazetteers | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/02_rules_and_gazetteers.ipynb) |
-| 03 contextual ner | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/03_contextual_ner.ipynb) |
-| 04 linking and ambiguity | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/04_linking_and_ambiguity.ipynb) |
-| 05 affect and events | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/05_affect_and_events.ipynb) |
-| 06 llm structured extraction | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/06_llm_structured_extraction.ipynb) |
-| 07 compare and adjudicate | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/07_compare_and_adjudicate.ipynb) |
-| 08 from text to map | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/08_from_text_to_map.ipynb) |
-| 09 responsible spatial ai | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/09_responsible_spatial_ai.ipynb) |
+| 00 setup and orientation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/00_setup_and_orientation.ipynb) |
+| 01 manual annotation | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/01_manual_annotation.ipynb) |
+| 02 rules and gazetteers | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/02_rules_and_gazetteers.ipynb) |
+| 03 contextual ner | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/03_contextual_ner.ipynb) |
+| 04 linking and ambiguity | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/04_linking_and_ambiguity.ipynb) |
+| 05 affect and events | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/05_affect_and_events.ipynb) |
+| 06 llm structured extraction | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/06_llm_structured_extraction.ipynb) |
+| 07 compare and adjudicate | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/07_compare_and_adjudicate.ipynb) |
+| 08 from text to map | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/08_from_text_to_map.ipynb) |
+| 09 responsible spatial ai | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/09_responsible_spatial_ai.ipynb) |
 
 After setup, record the installed commit with `!git rev-parse HEAD`. Manual rehearsal remains pending until the results are reported.

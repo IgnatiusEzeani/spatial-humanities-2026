@@ -81,7 +81,7 @@ def test_all_notebooks_use_one_setup_and_release_badge():
     for name in EXPECTED:
         text = (NOTEBOOK_DIR / name).read_text(encoding="utf-8")
         assert "workshop/sh2026_setup.py" in text
-        assert "spatial-humanities-2026/blob/sh2026-workshop-v1.0.0" in text
+        assert "spatial-humanities-2026/blob/main" in text
         assert "IgnatiusEzeani/spatio-textual/blob/" not in text
         assert "git\\\", \\\"clone" not in text
 

@@ -50,7 +50,7 @@ jobs:
             --spacy-model en_core_web_sm \
             --benchmark-mode \
             --frozen-at-commit "$GITHUB_SHA" \
-            --expected-sha256 be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b \
+            --expected-sha256 fcd985d1727bb924d1b01a91166a1f792f7e15cf2ebf6f126d85eff1ac195453 \
             --out-dir sh2026_outputs/benchmark_v1
 
       - name: Print span benchmark summary
@@ -107,7 +107,7 @@ jobs:
             --predictions sh2026_outputs/oracle_journey_predictions.jsonl \
             --benchmark-mode \
             --frozen-at-commit "$GITHUB_SHA" \
-            --expected-sha256 be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b \
+            --expected-sha256 fcd985d1727bb924d1b01a91166a1f792f7e15cf2ebf6f126d85eff1ac195453 \
             --out-dir sh2026_outputs/journey_oracle_smoke
           python - <<'PY'
           import json

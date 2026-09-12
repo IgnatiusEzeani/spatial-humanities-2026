@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      HOLDOUT_SHA256: be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b
+      HOLDOUT_SHA256: fcd985d1727bb924d1b01a91166a1f792f7e15cf2ebf6f126d85eff1ac195453
       SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       SH2026_SCOPE_FILE: config/journey_rule_scope
     steps:
