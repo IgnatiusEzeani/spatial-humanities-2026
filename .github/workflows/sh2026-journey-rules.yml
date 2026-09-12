@@ -1,0 +1,82 @@
+name: SH2026 rule journey development
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "benchmarks/build_journey_dev_v1.py"
+      - "docs/JOURNEY_DEVELOPMENT_PROTOCOL.md"
+      - "scripts/run_sh2026_rule_journey.py"
+      - "tests/test_journey_dev_builder.py"
+      - "tests/test_journey_rules.py"
+      - ".github/workflows/sh2026-journey-rules.yml"
+
+jobs:
+  journey-rules-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DEV_SHA256: a5b89a40d0d0f7be1b3994852fa041c262ee56535d9ef400e50558d00666421b
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lightweight journey environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+          mkdir -p sh2026_outputs/journey_rules
+          python -m pip freeze > sh2026_outputs/journey_rules/python_environment.txt
+          python --version > sh2026_outputs/journey_rules/python_version.txt
+
+      - name: Build and validate separate journey development corpus
+        run: |
+          python benchmarks/build_journey_dev_v1.py --output sh2026_outputs/journey_rules/journey_dev_v1.jsonl
+          ACTUAL=$(sha256sum sh2026_outputs/journey_rules/journey_dev_v1.jsonl | cut -d' ' -f1)
+          test "$ACTUAL" = "$DEV_SHA256"
+          python - <<'PY'
+          from spatio_textual.gold import load_gold_jsonl, assert_valid_gold
+          rows = load_gold_jsonl("sh2026_outputs/journey_rules/journey_dev_v1.jsonl")
+          assert len(rows) == 180
+          assert sum(len(row.get("journeys", [])) for row in rows) == 135
+          assert_valid_gold(rows)
+          print("Validated journey development corpus:", len(rows), "passages")
+          PY
+
+      - name: Run development-only rule/dependency journey condition
+        run: |
+          python scripts/run_sh2026_rule_journey.py \
+            sh2026_outputs/journey_rules/journey_dev_v1.jsonl \
+            --spacy-model en_core_web_sm \
+            --out-dir sh2026_outputs/journey_rules/development
+          cat sh2026_outputs/journey_rules/development/journey_summary.json
+
+      - name: Record development provenance
+        run: |
+          cat > sh2026_outputs/journey_rules/provenance.json <<EOF
+          {
+            "method": "rule_dependency_v1_development",
+            "spacy_model": "en_core_web_sm",
+            "development_sha256": "$DEV_SHA256",
+            "sh2026_branch_head_sha": "$SH2026_HEAD_SHA",
+            "journey_match_policy": "sh2026-journey-match-v1",
+            "journey_field_policy": "sh2026-journey-field-v1",
+            "tuning_policy": "development corpus only; this workflow never evaluates the frozen formal holdout"
+          }
+          EOF
+
+      - name: Upload development audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-journey-rules-development-${{ github.run_id }}
+          path: |
+            sh2026_outputs/journey_rules/
+            docs/JOURNEY_DEVELOPMENT_PROTOCOL.md
+          if-no-files-found: error
+          retention-days: 30

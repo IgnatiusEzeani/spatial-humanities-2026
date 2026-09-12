@@ -1,0 +1,167 @@
+name: SH2026 affect LLM formal
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - "config/affect_llm_scope"
+
+permissions:
+  contents: read
+
+jobs:
+  affect-llm-formal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      HOLDOUT_SHA256: 7f5007218934855e1c5e6cd941c8099ca855d70a85819e569837e8da6b85cd4d
+      SH2026_MODEL: gpt-5.6-sol
+      SH2026_REASONING_EFFORT: medium
+      SH2026_MAX_OUTPUT_TOKENS: "2048"
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SH2026_SCOPE_FILE: config/affect_llm_scope
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+
+      - name: Resolve formal LLM affect trigger
+        id: scope
+        shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            SCOPE="formal_holdout"
+          else
+            if ! git diff --name-only HEAD^ HEAD | grep -Fxq "$SH2026_SCOPE_FILE"; then
+              echo "run=false" >> "$GITHUB_OUTPUT"
+              echo "scope=none" >> "$GITHUB_OUTPUT"
+              echo "Marker was not changed by the latest commit; paid affect inference is intentionally skipped."
+              exit 0
+            fi
+            SCOPE="$(tr -d '[:space:]' < "$SH2026_SCOPE_FILE")"
+          fi
+          if [ "$SCOPE" = "disabled" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "scope=disabled" >> "$GITHUB_OUTPUT"
+            echo "Formal LLM affect inference is disabled."
+            exit 0
+          fi
+          test "$SCOPE" = "formal_holdout" || {
+            echo "Invalid SH2026 LLM affect scope: $SCOPE" >&2
+            exit 1
+          }
+          echo "run=true" >> "$GITHUB_OUTPUT"
+          echo "scope=$SCOPE" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        with:
+          python-version: "3.11"
+
+      - name: Install LLM affect environment
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+          python -m pip install -r requirements-llm.txt
+          mkdir -p sh2026_outputs/llm_affect_formal/inference
+          mkdir -p sh2026_outputs/llm_affect_formal/evaluation
+          python -m pip freeze > sh2026_outputs/llm_affect_formal/python_environment.txt
+          python --version > sh2026_outputs/llm_affect_formal/python_version.txt
+
+      - name: Require OpenAI repository secret
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY repository secret is not configured; refusing paid formal affect inference." >&2
+            exit 1
+          fi
+
+      - name: Build and verify frozen affect holdout
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          python benchmarks/build_affect_v1.py
+          test "$(sha256sum benchmarks/affect_holdout_v1.jsonl | cut -d' ' -f1)" = "$HOLDOUT_SHA256"
+
+      - name: Generate frozen strict-schema LLM affect predictions
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          python scripts/generate_sh2026_llm_affect_predictions.py \
+            benchmarks/affect_holdout_v1.jsonl \
+            --model "$SH2026_MODEL" \
+            --reasoning-effort "$SH2026_REASONING_EFFORT" \
+            --max-output-tokens "$SH2026_MAX_OUTPUT_TOKENS" \
+            --benchmark-mode \
+            --frozen-at-commit "$SH2026_HEAD_SHA" \
+            --expected-sha256 "$HOLDOUT_SHA256" \
+            --out-dir sh2026_outputs/llm_affect_formal/inference
+
+      - name: Verify formal affect inference manifest
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          python - <<'PY'
+          import json, os
+          p = 'sh2026_outputs/llm_affect_formal/inference/inference_manifest.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['run_mode'] == 'benchmark'
+          assert d['benchmark_sha256'] == os.environ['HOLDOUT_SHA256']
+          assert d['frozen_at_commit'] == os.environ['SH2026_HEAD_SHA']
+          assert d['examples'] == 48
+          assert d['provider'] == 'openai'
+          assert d['api'] == 'responses'
+          assert d['requested_model'] == os.environ['SH2026_MODEL']
+          assert d['reasoning_effort'] == os.environ['SH2026_REASONING_EFFORT']
+          assert d['max_output_tokens'] == int(os.environ['SH2026_MAX_OUTPUT_TOKENS'])
+          assert d['structured_output'] == 'strict_json_schema'
+          assert d['repetitions'] == 1
+          assert d['actual_input_tokens'] is not None
+          assert d['actual_output_tokens'] is not None
+          assert d['estimated_run_cost_usd'] is not None
+          print(json.dumps(d, indent=2))
+          PY
+
+      - name: Score preserved affect predictions
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          python scripts/run_sh2026_affect_benchmark.py \
+            benchmarks/affect_holdout_v1.jsonl \
+            --predictions sh2026_outputs/llm_affect_formal/inference/affect_predictions.jsonl \
+            --benchmark-mode \
+            --frozen-at-commit "$SH2026_HEAD_SHA" \
+            --expected-sha256 "$HOLDOUT_SHA256" \
+            --out-dir sh2026_outputs/llm_affect_formal/evaluation
+          cat sh2026_outputs/llm_affect_formal/evaluation/affect_summary.json
+
+      - name: Record formal condition
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        run: |
+          cat > sh2026_outputs/llm_affect_formal/formal_condition.json <<EOF
+          {
+            "schema_version": "sh2026-affect-llm-condition-v1",
+            "provider": "openai",
+            "model": "$SH2026_MODEL",
+            "api": "responses",
+            "reasoning_effort": "$SH2026_REASONING_EFFORT",
+            "max_output_tokens": $SH2026_MAX_OUTPUT_TOKENS,
+            "temperature": "not_set_api_default",
+            "structured_output": "strict_json_schema",
+            "holdout_sha256": "$HOLDOUT_SHA256",
+            "evaluation_commit": "$SH2026_HEAD_SHA",
+            "transient_retry_policy_seconds": [5, 10, 20, 40]
+          }
+          EOF
+
+      - name: Upload formal LLM affect artefacts
+        if: ${{ steps.scope.outputs.run == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-affect-llm-formal-${{ github.run_id }}
+          path: |
+            sh2026_outputs/llm_affect_formal/
+            docs/AFFECT_EXPERIMENT_V1.md
+            docs/AFFECT_LLM_CONDITION_V1.md
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cldw_penrith_pooley_bridge",
+    "title": "Lake District travel writing: Penrith to Pooley Bridge",
+    "genre": "historical travel writing",
+    "text": "From Penrith two roads lead to Pooley Bridge, about six miles distant, which spans the Eamont just at its issue from Ulleswater.",
+    "source_note": "Verified in the Corpus of Lake District Writing, corpus ID 1857_b: Anon.-Nelson (pub.), The English Lakes (London: Thomas Nelson & Sons, 1859), p. 4 of the source transcription. CLDW file LD80_transcribed/Anon1857_b.xml; metadata row 66. Preserve the source spelling 'Ulleswater'.",
+    "source_citation": "Anon.-Nelson (pub.). The English Lakes. London: Thomas Nelson & Sons, 1859, p. 4. Corpus of Lake District Writing, ID 1857_b.",
+    "source_repository_path": "UCREL/LakeDistrictCorpus/LD80_transcribed/Anon1857_b.xml",
+    "source_repository_commit": "9042811cf590f694f9b635c4bc656ed4f81ca422",
+    "distribution_status": "public_domain_source_verified",
+    "teaching_targets": ["toponyms", "geo-nouns", "distance", "spatial relation"]
+  },
+  {
+    "id": "synthetic_qa_journey",
+    "title": "Synthetic oral-history Q/A journey",
+    "genre": "synthetic oral-history-style transcript",
+    "text": "Q: Where did you live before the war?\nA: We lived in Amsterdam near my mother's family. Later we were deported by train to Auschwitz. I remember being very cold.\nQ: What happened after liberation?\nA: I travelled to London and found my brother there.",
+    "source_note": "Instructor-created synthetic example. It is not a quotation from a survivor testimony.",
+    "distribution_status": "safe_to_distribute",
+    "teaching_targets": ["Q/A segmentation", "places", "journey", "transport", "affect", "evidence"]
+  },
+  {
+    "id": "synthetic_ambiguous_cambridge",
+    "title": "Ambiguous place resolution",
+    "genre": "synthetic narrative",
+    "text": "After university I left Cambridge and travelled to London, where I stayed for several months.",
+    "source_note": "Instructor-created synthetic example.",
+    "distribution_status": "safe_to_distribute",
+    "teaching_targets": ["NER vs entity linking", "ambiguity", "human review"]
+  },
+  {
+    "id": "synthetic_historical_polity",
+    "title": "Historical place-name caution",
+    "genre": "synthetic historical narrative",
+    "text": "In 1938 our family lived in Czechoslovakia. Years later I described the region using the names I knew at the time.",
+    "source_note": "Instructor-created synthetic example.",
+    "distribution_status": "safe_to_distribute",
+    "teaching_targets": ["historical geography", "normalisation risk", "entity resolution"]
+  },
+  {
+    "id": "synthetic_relational_space",
+    "title": "Relational and non-cartographic space",
+    "genre": "synthetic narrative",
+    "text": "We left the village before dawn and hid in the woods beyond the river. The nearest road was somewhere to our left, but we avoided it.",
+    "source_note": "Instructor-created synthetic example.",
+    "distribution_status": "safe_to_distribute",
+    "teaching_targets": ["geo-nouns", "relative location", "vagueness", "non-mappable spatial evidence"]
+  }
+]

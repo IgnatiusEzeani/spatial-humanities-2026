@@ -1,0 +1,126 @@
+{
+  "snapshot_id": "sh2026-results-snapshot-v1",
+  "scope": "Artifact-backed SH2026 comparison rows safe for the conference demo and keynote. Synthetic and source-derived datasets are kept distinct.",
+  "rows": [
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "TOPONYM",
+      "method": "Rules + frozen gazetteer",
+      "precision": 1.0,
+      "recall": 0.073,
+      "f1": 0.136,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "TOPONYM",
+      "method": "spaCy en_core_web_sm",
+      "precision": 0.962,
+      "recall": 0.61,
+      "f1": 0.746,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "TOPONYM",
+      "method": "HF dslim/bert-base-NER",
+      "precision": 0.952,
+      "recall": 0.976,
+      "f1": 0.964,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "TOPONYM",
+      "method": "OpenAI gpt-5.6-sol",
+      "precision": 0.976,
+      "recall": 1.0,
+      "f1": 0.988,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "Journey",
+      "method": "Rule/dependency v1",
+      "precision": 0.944,
+      "recall": 0.944,
+      "f1": 0.944,
+      "status": "reportable",
+      "source_document": "docs/JOURNEY_RULE_RESULTS_V1.md"
+    },
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "Journey",
+      "method": "DistilBERT journey transformer",
+      "precision": 0.882353,
+      "recall": 0.833333,
+      "f1": 0.857143,
+      "status": "reportable",
+      "source_document": "docs/JOURNEY_TRANSFORMER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "CLDW external validation",
+      "task": "TOPONYM",
+      "method": "Rules + frozen gazetteer",
+      "precision": 0.667,
+      "recall": 0.047,
+      "f1": 0.087,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "CLDW external validation",
+      "task": "TOPONYM",
+      "method": "spaCy en_core_web_sm",
+      "precision": 0.556,
+      "recall": 0.233,
+      "f1": 0.328,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "CLDW external validation",
+      "task": "TOPONYM",
+      "method": "spaCy + project resources",
+      "precision": 0.393,
+      "recall": 0.256,
+      "f1": 0.31,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "CLDW external validation",
+      "task": "TOPONYM",
+      "method": "HF dslim/bert-base-NER",
+      "precision": 0.448,
+      "recall": 0.605,
+      "f1": 0.515,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    },
+    {
+      "dataset": "CLDW external validation",
+      "task": "TOPONYM",
+      "method": "OpenAI gpt-5.6-sol",
+      "precision": 0.829,
+      "recall": 0.791,
+      "f1": 0.81,
+      "status": "reportable",
+      "source_document": "docs/NER_RESULTS_V1.md"
+    }
+  ],
+  "omissions": [
+    {
+      "dataset": "Synthetic holdout v1",
+      "task": "Journey",
+      "method": "OpenAI gpt-5.6-sol",
+      "status": "not_reportable",
+      "source_document": "docs/LLM_JOURNEY_EXPERIMENT.md",
+      "reason": "The documented first armed formal run (34578230359) aborted on a provider HTTP 503 before a complete prediction artifact was produced or scored. No reportable formal journey metric is included until a successful provenance-complete run is documented."
+    }
+  ]
+}

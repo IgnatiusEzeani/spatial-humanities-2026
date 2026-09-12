@@ -1,0 +1,72 @@
+name: SH2026 NER teaching fallback
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/generate_ner_teaching_fallback.py"
+      - "workshop/03_contextual_ner.ipynb"
+      - "workshop/data/gold_reference_v0.1.jsonl"
+      - ".github/workflows/sh2026-ner-teaching-fallback.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pinned Hugging Face NER model
+        uses: actions/cache@v4
+        with:
+          path: .cache/huggingface
+          key: sh2026-ner-teaching-${{ runner.os }}-0b95561fd0c304538b5eb8a0ee532ca24dd009b9
+
+      - name: Install transformer environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install -r requirements-lite.txt
+          python -m pip install -r requirements-transformers.txt
+
+      - name: Generate Notebook 03 fallback
+        run: |
+          python scripts/generate_ner_teaching_fallback.py \
+            --output sh2026_outputs/ner_teaching_fallback_v1.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('sh2026_outputs/ner_teaching_fallback_v1.json')
+          data = json.loads(p.read_text())
+          assert data['schema_version'] == 'sh2026-ner-teaching-fallback-v1'
+          assert data['model'] == 'dslim/bert-base-NER'
+          assert data['revision'] == '0b95561fd0c304538b5eb8a0ee532ca24dd009b9'
+          assert data['records']
+          assert data['generation_commit']
+          print(json.dumps({
+              'records': len(data['records']),
+              'model': data['model'],
+              'revision': data['revision'],
+          }, indent=2))
+          PY
+
+      - name: Upload fallback artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-ner-teaching-fallback-${{ github.run_id }}
+          path: sh2026_outputs/ner_teaching_fallback_v1.json
+          if-no-files-found: error
+          retention-days: 30

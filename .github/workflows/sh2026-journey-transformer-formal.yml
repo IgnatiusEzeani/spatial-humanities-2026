@@ -1,0 +1,170 @@
+name: SH2026 transformer journey formal
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - "config/journey_transformer_scope"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  formal-transformer-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HOLDOUT_SHA256: be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b
+      DEV_SHA256: a5b89a40d0d0f7be1b3994852fa041c262ee56535d9ef400e50558d00666421b
+      DEV_RUN_ID: "34576524677"
+      DEV_ARTIFACT_NAME: sh2026-journey-transformer-development-34576524677
+      BASE_MODEL: distilbert/distilbert-base-cased
+      BASE_REVISION: 6ea81172465e8b0ad3fddeed32b986cdcdcffcf0
+      MODEL_SHA256: 6ebb3961b644fd471a695a1533f69ce4ebaa336acfd38e27bf78daed39b8e1e1
+      CONFIG_SHA256: d08b3f9b88e212593f9759915cfb73698bbb8efa4b69fa2e84acb6c0a481c50b
+      TOKENIZER_SHA256: 6391b03e805bd3f746473a3747e4f3a5dca27489cbcd666bc48164835d04c40e
+      MODEL_TRAINING_HEAD_SHA: 272eb19fb4e906e0398616512f1fb0c1377b46fc
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SH2026_SCOPE_FILE: config/journey_transformer_scope
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+
+      - name: Resolve formal transformer journey trigger
+        shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            SCOPE="formal_holdout"
+          else
+            CHANGED=$(git diff-tree --no-commit-id --name-only -r "$SH2026_HEAD_SHA")
+            echo "$CHANGED" | grep -qx "$SH2026_SCOPE_FILE" || {
+              echo "Formal transformer run not armed by the latest commit."
+              exit 0
+            }
+            SCOPE="$(tr -d '[:space:]' < "$SH2026_SCOPE_FILE")"
+          fi
+          test "$SCOPE" = "formal_holdout" || {
+            echo "Formal transformer journey run not armed: $SCOPE"
+            exit 0
+          }
+          echo "SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY=1" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-python@v5
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        with:
+          python-version: "3.11"
+
+      - name: Install formal transformer environment
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install -r requirements-transformers.txt
+          mkdir -p sh2026_outputs/journey_transformer_formal/source_model
+          mkdir -p sh2026_outputs/journey_transformer_formal/results
+          python -m pip freeze > sh2026_outputs/journey_transformer_formal/python_environment.txt
+          python --version > sh2026_outputs/journey_transformer_formal/python_version.txt
+
+      - name: Download frozen fine-tuned development checkpoint
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download "$DEV_RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --name "$DEV_ARTIFACT_NAME" \
+            --dir sh2026_outputs/journey_transformer_formal/source_model
+          MODEL_DIR="sh2026_outputs/journey_transformer_formal/source_model/sh2026_outputs/journey_transformer_dev/run/model"
+          test -f "$MODEL_DIR/model.safetensors"
+          test "$(sha256sum "$MODEL_DIR/model.safetensors" | cut -d' ' -f1)" = "$MODEL_SHA256"
+          test "$(sha256sum "$MODEL_DIR/config.json" | cut -d' ' -f1)" = "$CONFIG_SHA256"
+          test "$(sha256sum "$MODEL_DIR/tokenizer.json" | cut -d' ' -f1)" = "$TOKENIZER_SHA256"
+          echo "SH2026_FROZEN_MODEL_DIR=$MODEL_DIR" >> "$GITHUB_ENV"
+
+      - name: Verify frozen model training manifest
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        run: |
+          python - <<'PY'
+          import json, os
+          p = 'sh2026_outputs/journey_transformer_formal/source_model/sh2026_outputs/journey_transformer_dev/run/training_manifest.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['development_sha256'] == os.environ['DEV_SHA256']
+          assert d['base_model'] == os.environ['BASE_MODEL']
+          assert d['requested_revision'] == os.environ['BASE_REVISION']
+          assert d['resolved_revision'] == os.environ['BASE_REVISION']
+          assert d['epochs'] == 5
+          assert d['batch_size'] == 8
+          assert d['learning_rate'] == 5e-5
+          assert d['seed'] == 2026
+          assert d['max_length'] == 256
+          assert d['journey_dev_summary']['detection']['f1'] == 1.0
+          assert 'formal holdout was not evaluated' in d['claim_boundary']
+          print('Frozen transformer checkpoint provenance verified.')
+          PY
+
+      - name: Build and verify frozen formal holdout
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        run: |
+          python benchmarks/build_holdout_v1.py
+          ACTUAL=$(sha256sum benchmarks/holdout_v1.jsonl | cut -d' ' -f1)
+          test "$ACTUAL" = "$HOLDOUT_SHA256"
+
+      - name: Run frozen transformer journey holdout evaluation
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        run: |
+          python scripts/run_sh2026_transformer_journey.py \
+            benchmarks/holdout_v1.jsonl \
+            --model-dir "$SH2026_FROZEN_MODEL_DIR" \
+            --max-length 256 \
+            --benchmark-mode \
+            --frozen-at-commit "$SH2026_HEAD_SHA" \
+            --expected-sha256 "$HOLDOUT_SHA256" \
+            --out-dir sh2026_outputs/journey_transformer_formal/results
+          cat sh2026_outputs/journey_transformer_formal/results/journey_summary.json
+
+      - name: Record formal provenance
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        run: |
+          cat > sh2026_outputs/journey_transformer_formal/provenance.json <<EOF
+          {
+            "method": "transformer_token_event_v1",
+            "base_model": "$BASE_MODEL",
+            "base_revision": "$BASE_REVISION",
+            "development_sha256": "$DEV_SHA256",
+            "development_run_id": "$DEV_RUN_ID",
+            "development_artifact": "$DEV_ARTIFACT_NAME",
+            "model_training_head_sha": "$MODEL_TRAINING_HEAD_SHA",
+            "model_safetensors_sha256": "$MODEL_SHA256",
+            "config_sha256": "$CONFIG_SHA256",
+            "tokenizer_sha256": "$TOKENIZER_SHA256",
+            "training_epochs": 5,
+            "training_batch_size": 8,
+            "training_learning_rate": 0.00005,
+            "training_seed": 2026,
+            "max_length": 256,
+            "formal_holdout_sha256": "$HOLDOUT_SHA256",
+            "evaluation_head_sha": "$SH2026_HEAD_SHA",
+            "journey_match_policy": "sh2026-journey-match-v1",
+            "journey_field_policy": "sh2026-journey-field-v1",
+            "freeze_note": "Fine-tuned checkpoint and inference assembly were frozen after development-only evaluation and before formal holdout scoring. The preceding infrastructure attempt failed before model evaluation because of a CLI argument typo."
+          }
+          EOF
+
+      - name: Upload formal transformer journey artifact
+        if: env.SH2026_RUN_FORMAL_TRANSFORMER_JOURNEY == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-journey-transformer-formal-${{ github.run_id }}
+          path: |
+            sh2026_outputs/journey_transformer_formal/results/
+            sh2026_outputs/journey_transformer_formal/provenance.json
+            sh2026_outputs/journey_transformer_formal/python_environment.txt
+            sh2026_outputs/journey_transformer_formal/python_version.txt
+            docs/JOURNEY_DEVELOPMENT_PROTOCOL.md
+          if-no-files-found: error
+          retention-days: 30

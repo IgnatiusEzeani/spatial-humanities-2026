@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/data/gold_schema_v0.1.json",
+  "title": "SH2026 Gold Reference Record",
+  "description": "Machine-readable companion to docs/GOLD_ANNOTATION_GUIDE.md. Runtime validation remains available without jsonschema via spatio_textual.gold.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "example_id",
+    "title",
+    "text",
+    "source",
+    "annotation_policy",
+    "reference_status",
+    "spans",
+    "relations",
+    "journeys",
+    "adjudication_notes"
+  ],
+  "properties": {
+    "schema_version": {"const": "spatio-textual-gold-0.1"},
+    "example_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string"},
+    "text": {"type": "string"},
+    "source": {
+      "type": "object",
+      "required": ["genre", "source_note", "distribution_status"],
+      "properties": {
+        "genre": {"type": "string"},
+        "source_note": {"type": "string", "minLength": 1},
+        "distribution_status": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "annotation_policy": {"type": "string"},
+    "reference_status": {
+      "enum": [
+        "draft",
+        "adjudicated_reference",
+        "provisional_until_source_citation_verified",
+        "deprecated"
+      ]
+    },
+    "spans": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/span"}
+    },
+    "relations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/relation"}
+    },
+    "journeys": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/journey"}
+    },
+    "adjudication_notes": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "$defs": {
+    "certainty": {
+      "enum": ["explicit", "contextual_inference", "ambiguous", "human_supplied"]
+    },
+    "journeyFieldStatus": {
+      "enum": ["explicit", "contextual_inference", "missing", "human_supplied"]
+    },
+    "span": {
+      "type": "object",
+      "required": [
+        "span_id", "layer", "label", "text", "start_char", "end_char",
+        "certainty", "attributes"
+      ],
+      "properties": {
+        "span_id": {"type": "string", "minLength": 1},
+        "layer": {"type": ["string", "null"]},
+        "label": {
+          "enum": [
+            "TOPONYM", "GEONOUN", "SPATIAL_RELATION", "DISTANCE", "DIRECTION",
+            "TIME", "MOVEMENT_CUE", "TRANSPORT_CUE", "SUBJECTIVE_DESCRIPTOR",
+            "SENSORY_DESCRIPTOR", "DEICTIC_REFERENCE"
+          ]
+        },
+        "text": {"type": "string", "minLength": 1},
+        "start_char": {"type": "integer", "minimum": 0},
+        "end_char": {"type": "integer", "minimum": 0},
+        "conceptual_level": {"type": ["string", "null"]},
+        "certainty": {"$ref": "#/$defs/certainty"},
+        "attributes": {"type": "object"},
+        "notes": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "required": [
+        "relation_id", "type", "source_span_id", "target_span_id", "source_ref",
+        "target_ref", "evidence_quote", "evidence_start_char", "evidence_end_char",
+        "certainty", "attributes", "notes"
+      ],
+      "properties": {
+        "relation_id": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "source_span_id": {"type": ["string", "null"]},
+        "target_span_id": {"type": ["string", "null"]},
+        "source_ref": {"type": ["string", "null"]},
+        "target_ref": {"type": ["string", "null"]},
+        "evidence_quote": {"type": "string", "minLength": 1},
+        "evidence_start_char": {"type": "integer", "minimum": 0},
+        "evidence_end_char": {"type": "integer", "minimum": 0},
+        "certainty": {"$ref": "#/$defs/certainty"},
+        "attributes": {"type": "object"},
+        "notes": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "journey": {
+      "type": "object",
+      "required": [
+        "journeyId", "fileId", "segId", "start_location", "end_location",
+        "transport_mode", "date", "journey_reason", "evidence_quote",
+        "evidence_start_char", "evidence_end_char", "explicit_or_inferred",
+        "confidence", "model", "provider", "requires_review", "review_notes",
+        "human_status", "human_edits"
+      ],
+      "properties": {
+        "journeyId": {"type": "string", "minLength": 1},
+        "fileId": {"type": "string", "minLength": 1},
+        "segId": {"type": ["integer", "string", "null"]},
+        "start_location": {"type": ["string", "null"]},
+        "end_location": {"type": ["string", "null"]},
+        "transport_mode": {"type": ["string", "null"]},
+        "date": {"type": ["string", "null"]},
+        "journey_reason": {"type": ["string", "null"]},
+        "evidence_quote": {"type": "string", "minLength": 1},
+        "evidence_start_char": {"type": "integer", "minimum": 0},
+        "evidence_end_char": {"type": "integer", "minimum": 0},
+        "explicit_or_inferred": {
+          "type": "object",
+          "required": [
+            "start_location", "end_location", "transport_mode", "date", "journey_reason"
+          ],
+          "properties": {
+            "start_location": {"$ref": "#/$defs/journeyFieldStatus"},
+            "end_location": {"$ref": "#/$defs/journeyFieldStatus"},
+            "transport_mode": {"$ref": "#/$defs/journeyFieldStatus"},
+            "date": {"$ref": "#/$defs/journeyFieldStatus"},
+            "journey_reason": {"$ref": "#/$defs/journeyFieldStatus"}
+          },
+          "additionalProperties": false
+        },
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "model": {"type": ["string", "null"]},
+        "provider": {"type": ["string", "null"]},
+        "requires_review": {"type": "boolean"},
+        "review_notes": {"type": "array", "items": {"type": "string"}},
+        "human_status": {
+          "enum": ["unreviewed", "accepted", "edited", "rejected"]
+        },
+        "human_edits": {"type": "array"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

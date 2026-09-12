@@ -1,0 +1,133 @@
+name: SH2026 benchmark smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "benchmarks/**"
+      - "scripts/run_sh2026_benchmark.py"
+      - "scripts/run_sh2026_journey_benchmark.py"
+      - "workshop/data/teaching_gazetteer.csv"
+      - ".github/workflows/sh2026-benchmark.yml"
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lightweight benchmark environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+
+      - name: Generate and verify frozen holdout
+        run: |
+          python benchmarks/build_holdout_v1.py
+          cd benchmarks
+          sha256sum -c holdout_v1.sha256
+
+      - name: Validate reference annotations
+        run: |
+          python - <<'PY'
+          from spatio_textual.gold import load_gold_jsonl, assert_valid_gold
+          path = "benchmarks/holdout_v1.jsonl"
+          records = load_gold_jsonl(path)
+          assert len(records) == 30
+          assert_valid_gold(records)
+          print(f"Validated {len(records)} frozen reference records")
+          PY
+
+      - name: Run deterministic, contextual and hybrid baseline benchmark
+        run: |
+          python scripts/run_sh2026_benchmark.py \
+            benchmarks/holdout_v1.jsonl \
+            --methods rules,spacy,spacy_resources \
+            --spacy-model en_core_web_sm \
+            --benchmark-mode \
+            --frozen-at-commit "$GITHUB_SHA" \
+            --expected-sha256 be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b \
+            --out-dir sh2026_outputs/benchmark_v1
+
+      - name: Print span benchmark summary
+        run: cat sh2026_outputs/benchmark_v1/comparison_summary.json
+
+      - name: Build oracle cache for journey scorer smoke test
+        run: |
+          python - <<'PY'
+          import copy
+          import hashlib
+          import json
+          from pathlib import Path
+          from spatio_textual.gold import load_gold_jsonl
+          from spatio_textual.journeys import build_journey_prompt
+
+          benchmark = Path("benchmarks/holdout_v1.jsonl")
+          benchmark_sha = hashlib.sha256(benchmark.read_bytes()).hexdigest()
+          rows = load_gold_jsonl(benchmark)
+          out = Path("sh2026_outputs/oracle_journey_predictions.jsonl")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          with out.open("w", encoding="utf-8") as fh:
+              for record in rows:
+                  text = record["text"]
+                  journeys = copy.deepcopy(record.get("journeys", []))
+                  for journey in journeys:
+                      a = journey.get("evidence_start_char")
+                      b = journey.get("evidence_end_char")
+                      quote = journey.get("evidence_quote")
+                      journey["evidence_grounded"] = (
+                          isinstance(a, int)
+                          and isinstance(b, int)
+                          and isinstance(quote, str)
+                          and text[a:b] == quote
+                      )
+                  row = {
+                      "schema_version": "sh2026-journey-prediction-v1",
+                      "example_id": record["example_id"],
+                      "benchmark_sha256": benchmark_sha,
+                      "source_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                      "prompt_sha256": hashlib.sha256(build_journey_prompt(text).encode("utf-8")).hexdigest(),
+                      "provider": "oracle_ci_smoke",
+                      "model": "human_reference_copy",
+                      "journeys": journeys,
+                      "telemetry": [],
+                  }
+                  fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+          print(f"Wrote {len(rows)} oracle cache rows to {out}")
+          PY
+
+      - name: Smoke-test formal journey re-scoring path
+        run: |
+          python scripts/run_sh2026_journey_benchmark.py \
+            benchmarks/holdout_v1.jsonl \
+            --predictions sh2026_outputs/oracle_journey_predictions.jsonl \
+            --benchmark-mode \
+            --frozen-at-commit "$GITHUB_SHA" \
+            --expected-sha256 be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b \
+            --out-dir sh2026_outputs/journey_oracle_smoke
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(Path("sh2026_outputs/journey_oracle_smoke/journey_summary.json").read_text())
+          assert summary["detection"]["f1"] == 1.0, summary["detection"]
+          assert summary["fields"]["totals"]["precision"] == 1.0, summary["fields"]["totals"]
+          assert summary["fields"]["totals"]["recall"] == 1.0, summary["fields"]["totals"]
+          assert summary["audit"]["evidence_grounded_rate"] == 1.0, summary["audit"]
+          print("Frozen journey scoring path passed oracle smoke test")
+          PY
+
+      - name: Upload benchmark audit artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-benchmark-v1-${{ github.run_id }}
+          path: |
+            sh2026_outputs/benchmark_v1/
+            sh2026_outputs/journey_oracle_smoke/
+            benchmarks/holdout_v1.jsonl
+            benchmarks/holdout_v1.sha256
+          if-no-files-found: error
+          retention-days: 30

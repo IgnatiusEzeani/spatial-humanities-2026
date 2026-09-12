@@ -1,0 +1,181 @@
+{
+  "schema_version": "sh2026-affect-teaching-fallback-v1",
+  "purpose": "Precomputed machine output for the public-safe Notebook 05 teaching passages. This is a reliability fallback for demonstrating a pinned transformer condition; it is not a benchmark result and must not be presented as one.",
+  "source": "workshop/05_affect_and_events.ipynb",
+  "source_status": "instructor_created_public_safe",
+  "generated_at_utc": "2026-09-11T14:08:16.152178+00:00",
+  "generation_commit": "6f10e40adc37c5aa75ac1636fa40a1ac66135313",
+  "sentiment_model": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+  "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+  "emotion_model": "j-hartmann/emotion-english-distilroberta-base",
+  "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b",
+  "representable_emotion_labels": [
+    "anger",
+    "fear",
+    "joy",
+    "sadness",
+    "surprise"
+  ],
+  "unsupported_emotion_labels": [
+    "anxiety",
+    "despair",
+    "gratitude"
+  ],
+  "records": [
+    {
+      "segment_id": 0,
+      "text": "We reached the village at sunset and felt relieved to find shelter.",
+      "sentiment_label": "positive",
+      "emotion_labels": ["joy"],
+      "evidence_quote": null,
+      "explicit_or_inferred": "not_available",
+      "requires_review": false,
+      "sentiment_distribution": {"positive": 0.85493, "negative": 0.00579, "neutral": 0.13928},
+      "emotion_distribution": {"joy": 0.987002, "sadness": 0.003655, "neutral": 0.003575, "disgust": 0.002884, "anger": 0.00149, "fear": 0.00081, "surprise": 0.000585},
+      "representable_emotion_labels": ["anger", "fear", "joy", "sadness", "surprise"],
+      "unsupported_emotion_labels": ["anxiety", "despair", "gratitude"],
+      "telemetry": {
+        "task": "affect",
+        "backend": "transformer",
+        "provider": "huggingface_transformers",
+        "model": {
+          "sentiment": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+          "emotion": "j-hartmann/emotion-english-distilroberta-base",
+          "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b"
+        },
+        "latency_ms": 15249.696,
+        "input_chars": 67,
+        "input_tokens_est": 17,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "segment_id": 1,
+      "text": "The road was quiet and we waited beside the river.",
+      "sentiment_label": "neutral",
+      "emotion_labels": ["fear"],
+      "evidence_quote": null,
+      "explicit_or_inferred": "not_available",
+      "requires_review": false,
+      "sentiment_distribution": {"positive": 0.16153, "negative": 0.03202, "neutral": 0.806449},
+      "emotion_distribution": {"fear": 0.848801, "neutral": 0.050103, "disgust": 0.043542, "sadness": 0.022091, "surprise": 0.016627, "anger": 0.014982, "joy": 0.003853},
+      "representable_emotion_labels": ["anger", "fear", "joy", "sadness", "surprise"],
+      "unsupported_emotion_labels": ["anxiety", "despair", "gratitude"],
+      "telemetry": {
+        "task": "affect",
+        "backend": "transformer",
+        "provider": "huggingface_transformers",
+        "model": {
+          "sentiment": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+          "emotion": "j-hartmann/emotion-english-distilroberta-base",
+          "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b"
+        },
+        "latency_ms": 53.497,
+        "input_chars": 50,
+        "input_tokens_est": 12,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "segment_id": 2,
+      "text": "I was afraid as we crossed the dark forest, but later I felt safe.",
+      "sentiment_label": "neutral",
+      "emotion_labels": ["fear"],
+      "evidence_quote": null,
+      "explicit_or_inferred": "not_available",
+      "requires_review": false,
+      "sentiment_distribution": {"positive": 0.160306, "negative": 0.163307, "neutral": 0.676387},
+      "emotion_distribution": {"fear": 0.947669, "joy": 0.039642, "neutral": 0.005865, "sadness": 0.003355, "surprise": 0.00158, "disgust": 0.000969, "anger": 0.000919},
+      "representable_emotion_labels": ["anger", "fear", "joy", "sadness", "surprise"],
+      "unsupported_emotion_labels": ["anxiety", "despair", "gratitude"],
+      "telemetry": {
+        "task": "affect",
+        "backend": "transformer",
+        "provider": "huggingface_transformers",
+        "model": {
+          "sentiment": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+          "emotion": "j-hartmann/emotion-english-distilroberta-base",
+          "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b"
+        },
+        "latency_ms": 56.662,
+        "input_chars": 66,
+        "input_tokens_est": 16,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "segment_id": 3,
+      "text": "We left the village and walked to the station before returning home.",
+      "sentiment_label": "neutral",
+      "emotion_labels": ["fear"],
+      "evidence_quote": null,
+      "explicit_or_inferred": "not_available",
+      "requires_review": false,
+      "sentiment_distribution": {"positive": 0.055693, "negative": 0.015402, "neutral": 0.928905},
+      "emotion_distribution": {"fear": 0.668582, "neutral": 0.169949, "disgust": 0.083032, "anger": 0.028361, "joy": 0.023677, "surprise": 0.014983, "sadness": 0.011416},
+      "representable_emotion_labels": ["anger", "fear", "joy", "sadness", "surprise"],
+      "unsupported_emotion_labels": ["anxiety", "despair", "gratitude"],
+      "telemetry": {
+        "task": "affect",
+        "backend": "transformer",
+        "provider": "huggingface_transformers",
+        "model": {
+          "sentiment": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+          "emotion": "j-hartmann/emotion-english-distilroberta-base",
+          "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b"
+        },
+        "latency_ms": 56.061,
+        "input_chars": 68,
+        "input_tokens_est": 17,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "success": true,
+        "error": null
+      }
+    },
+    {
+      "segment_id": 4,
+      "text": "The children returned happily from summer camp.",
+      "sentiment_label": "positive",
+      "emotion_labels": ["joy"],
+      "evidence_quote": null,
+      "explicit_or_inferred": "not_available",
+      "requires_review": false,
+      "sentiment_distribution": {"positive": 0.948613, "negative": 0.002836, "neutral": 0.048551},
+      "emotion_distribution": {"joy": 0.980287, "neutral": 0.009238, "sadness": 0.004226, "surprise": 0.002491, "disgust": 0.001884, "anger": 0.001667, "fear": 0.000206},
+      "representable_emotion_labels": ["anger", "fear", "joy", "sadness", "surprise"],
+      "unsupported_emotion_labels": ["anxiety", "despair", "gratitude"],
+      "telemetry": {
+        "task": "affect",
+        "backend": "transformer",
+        "provider": "huggingface_transformers",
+        "model": {
+          "sentiment": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+          "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+          "emotion": "j-hartmann/emotion-english-distilroberta-base",
+          "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b"
+        },
+        "latency_ms": 48.65,
+        "input_chars": 47,
+        "input_tokens_est": 12,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "success": true,
+        "error": null
+      }
+    }
+  ]
+}

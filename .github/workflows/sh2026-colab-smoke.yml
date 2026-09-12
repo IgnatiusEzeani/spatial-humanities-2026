@@ -1,0 +1,80 @@
+name: SH2026 Colab notebook smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "workshop/**"
+      - "requirements-lite.txt"
+      - ".github/workflows/sh2026-colab-smoke.yml"
+
+jobs:
+  notebooks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Prepare clean CPU notebook environment
+        run: |
+          sudo mkdir -p /content
+          sudo chown "$USER":"$USER" /content
+          # The notebooks use /content/spatial-humanities-2026 in Colab. In CI, point that
+          # path at the checked-out PR commit so smoke tests cannot accidentally
+          # clone and execute the older release branch instead of the code under review.
+          ln -sfn "$GITHUB_WORKSPACE" /content/spatial-humanities-2026
+          test "$(readlink -f /content/spatial-humanities-2026)" = "$(readlink -f "$GITHUB_WORKSPACE")"
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt nbconvert ipykernel
+          mkdir -p sh2026_outputs/notebook_smoke
+
+      - name: Execute all default workshop notebook paths
+        env:
+          OPENAI_API_KEY: ""
+          ANTHROPIC_API_KEY: ""
+          GOOGLE_API_KEY: ""
+          MISTRAL_API_KEY: ""
+        run: |
+          set -euo pipefail
+          notebooks=(
+            workshop/00_setup_and_orientation.ipynb
+            workshop/01_manual_annotation.ipynb
+            workshop/02_rules_and_gazetteers.ipynb
+            workshop/03_contextual_ner.ipynb
+            workshop/04_linking_and_ambiguity.ipynb
+            workshop/05_affect_and_events.ipynb
+            workshop/06_llm_structured_extraction.ipynb
+            workshop/07_compare_and_adjudicate.ipynb
+            workshop/08_from_text_to_map.ipynb
+            workshop/09_responsible_spatial_ai.ipynb
+          )
+          for nb in "${notebooks[@]}"; do
+            name="$(basename "$nb" .ipynb)"
+            echo "=== Executing $nb ==="
+            jupyter nbconvert \
+              --to notebook \
+              --execute "$nb" \
+              --ExecutePreprocessor.timeout=300 \
+              --ExecutePreprocessor.kernel_name=python3 \
+              --output "${name}.executed.ipynb" \
+              --output-dir sh2026_outputs/notebook_smoke
+          done
+
+      - name: Verify all ten executed notebooks exist
+        run: |
+          count=$(find sh2026_outputs/notebook_smoke -maxdepth 1 -name '*.executed.ipynb' | wc -l)
+          test "$count" -eq 10
+          echo "Executed notebook count: $count"
+
+      - name: Upload executed notebooks for audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-colab-smoke-${{ github.run_id }}
+          path: sh2026_outputs/notebook_smoke/
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,97 @@
+name: SH2026 Hugging Face benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "benchmarks/**"
+      - "scripts/run_sh2026_benchmark.py"
+      - "requirements-lite.txt"
+      - "pyproject.toml"
+      - ".github/workflows/sh2026-hf-benchmark.yml"
+
+jobs:
+  hf-benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      TOKENIZERS_PARALLELISM: "false"
+      SH2026_HF_MODEL: dslim/bert-base-NER
+      SH2026_HF_REVISION: 0b95561fd0c304538b5eb8a0ee532ca24dd009b9
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache revision-pinned Hugging Face model
+        uses: actions/cache@v4
+        with:
+          path: .cache/huggingface
+          key: sh2026-hf-dslim-bert-base-ner-0b95561-v1
+
+      - name: Install benchmark environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+          python -m pip install -r requirements-transformers.txt
+          mkdir -p sh2026_outputs/benchmark_v1_hf
+          python -m pip freeze > sh2026_outputs/benchmark_v1_hf/python_environment.txt
+          python --version > sh2026_outputs/benchmark_v1_hf/python_version.txt
+
+      - name: Generate and verify frozen holdout
+        run: |
+          python benchmarks/build_holdout_v1.py
+          cd benchmarks
+          sha256sum -c holdout_v1.sha256
+
+      - name: Validate reference annotations
+        run: |
+          python - <<'PY'
+          from spatio_textual.gold import load_gold_jsonl, assert_valid_gold
+          path = "benchmarks/holdout_v1.jsonl"
+          records = load_gold_jsonl(path)
+          assert len(records) == 30
+          assert_valid_gold(records)
+          print(f"Validated {len(records)} frozen reference records")
+          PY
+
+      - name: Run four-condition benchmark including revision-pinned HF transformer
+        run: |
+          python scripts/run_sh2026_benchmark.py \
+            benchmarks/holdout_v1.jsonl \
+            --methods rules,spacy,spacy_resources,hf \
+            --spacy-model en_core_web_sm \
+            --hf-model "$SH2026_HF_MODEL" \
+            --hf-revision "$SH2026_HF_REVISION" \
+            --benchmark-mode \
+            --frozen-at-commit "$GITHUB_SHA" \
+            --expected-sha256 be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b \
+            --out-dir sh2026_outputs/benchmark_v1_hf
+
+      - name: Record model provenance
+        run: |
+          cat > sh2026_outputs/benchmark_v1_hf/model_provenance.json <<EOF
+          {
+            "hf_model": "$SH2026_HF_MODEL",
+            "hf_revision": "$SH2026_HF_REVISION",
+            "benchmark_sha256": "be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b",
+            "git_sha": "$GITHUB_SHA"
+          }
+          EOF
+
+      - name: Print benchmark summary
+        run: cat sh2026_outputs/benchmark_v1_hf/comparison_summary.json
+
+      - name: Upload four-condition benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-benchmark-v1-hf-${{ github.run_id }}
+          path: |
+            sh2026_outputs/benchmark_v1_hf/
+            benchmarks/holdout_v1.jsonl
+            benchmarks/holdout_v1.sha256
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,3 @@
+-r requirements-lite.txt
+transformers>=4.44
+torch>=2.1

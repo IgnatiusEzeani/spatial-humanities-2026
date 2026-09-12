@@ -1,0 +1,69 @@
+name: SH2026 affect teaching fallback
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "scripts/generate_affect_teaching_fallback.py"
+      - "workshop/05_affect_and_events.ipynb"
+      - ".github/workflows/sh2026-affect-teaching-fallback.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pinned Hugging Face affect models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: sh2026-affect-teaching-${{ runner.os }}-3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7-0e1cd914e3d46199ed785853e12b57304e04178b
+
+      - name: Install transformer environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install -r requirements-transformers.txt
+
+      - name: Generate Notebook 05 fallback
+        run: |
+          python scripts/generate_affect_teaching_fallback.py \
+            --output sh2026_outputs/affect_teaching_fallback_v1.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('sh2026_outputs/affect_teaching_fallback_v1.json')
+          data = json.loads(p.read_text())
+          assert data['schema_version'] == 'sh2026-affect-teaching-fallback-v1'
+          assert len(data['records']) == 5
+          assert data['generation_commit']
+          print(json.dumps({
+              'records': len(data['records']),
+              'sentiment_model': data['sentiment_model'],
+              'sentiment_revision': data['sentiment_revision'],
+              'emotion_model': data['emotion_model'],
+              'emotion_revision': data['emotion_revision'],
+          }, indent=2))
+          PY
+
+      - name: Upload fallback artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-affect-teaching-fallback-${{ github.run_id }}
+          path: sh2026_outputs/affect_teaching_fallback_v1.json
+          if-no-files-found: error
+          retention-days: 30

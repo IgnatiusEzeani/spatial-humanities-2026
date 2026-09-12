@@ -1,0 +1,97 @@
+name: SH2026 affect rule benchmark
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "benchmarks/**"
+      - "scripts/run_sh2026_affect_rule.py"
+      - "docs/AFFECT_EXPERIMENT_V1.md"
+      - ".github/workflows/sh2026-affect-rule.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  affect-rule:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+
+      - name: Build deterministic affect corpora
+        run: |
+          python benchmarks/build_affect_v1.py
+          echo "DEV_SHA256=$(sha256sum benchmarks/affect_dev_v1.jsonl | cut -d' ' -f1)" >> "$GITHUB_ENV"
+          echo "HOLDOUT_SHA256=$(sha256sum benchmarks/affect_holdout_v1.jsonl | cut -d' ' -f1)" >> "$GITHUB_ENV"
+          wc -l benchmarks/affect_dev_v1.jsonl benchmarks/affect_holdout_v1.jsonl
+
+      - name: Verify corpus schema and counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path, expected in [
+              (Path('benchmarks/affect_dev_v1.jsonl'), 80),
+              (Path('benchmarks/affect_holdout_v1.jsonl'), 48),
+          ]:
+              rows = [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines() if line.strip()]
+              assert len(rows) == expected
+              assert len({r['example_id'] for r in rows}) == expected
+              for r in rows:
+                  assert r['schema_version'] == 'sh2026-affect-reference-v1'
+                  assert r['source']['public_safe'] is True
+                  assert r['sentiment_label'] in {'positive','negative','neutral','mixed'}
+                  assert set(r['emotion_labels']) <= {'fear','sadness','anger','joy','anxiety','despair','gratitude','surprise'}
+          print('Affect corpus validation passed.')
+          PY
+
+      - name: Run transparent rule baseline on development set
+        run: |
+          python scripts/run_sh2026_affect_rule.py \
+            benchmarks/affect_dev_v1.jsonl \
+            --out-dir sh2026_outputs/affect_rule/dev
+
+      - name: Run first frozen rule baseline on holdout
+        run: |
+          python scripts/run_sh2026_affect_rule.py \
+            benchmarks/affect_holdout_v1.jsonl \
+            --out-dir sh2026_outputs/affect_rule/holdout
+          cat sh2026_outputs/affect_rule/holdout/affect_summary.json
+
+      - name: Record corpus provenance
+        run: |
+          cat > sh2026_outputs/affect_rule/corpus_manifest.json <<EOF
+          {
+            "schema_version": "sh2026-affect-corpus-manifest-v1",
+            "development_examples": 80,
+            "holdout_examples": 48,
+            "development_sha256": "$DEV_SHA256",
+            "holdout_sha256": "$HOLDOUT_SHA256",
+            "source_type": "instructor_authored_synthetic_public_safe",
+            "commit": "${{ github.event.pull_request.head.sha || github.sha }}",
+            "holdout_note": "Rule implementation was committed before the first holdout execution. No post-holdout tuning is permitted for the v1 rule condition."
+          }
+          EOF
+          cat sh2026_outputs/affect_rule/corpus_manifest.json
+
+      - name: Upload affect rule artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-affect-rule-${{ github.run_id }}
+          path: |
+            benchmarks/affect_dev_v1.jsonl
+            benchmarks/affect_holdout_v1.jsonl
+            sh2026_outputs/affect_rule/
+            docs/AFFECT_EXPERIMENT_V1.md
+          if-no-files-found: error
+          retention-days: 30

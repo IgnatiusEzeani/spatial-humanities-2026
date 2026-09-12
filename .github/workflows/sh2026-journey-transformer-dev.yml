@@ -1,0 +1,83 @@
+name: SH2026 transformer journey development
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "benchmarks/build_journey_dev_v1.py"
+      - "scripts/train_sh2026_journey_transformer.py"
+      - "scripts/run_sh2026_transformer_journey.py"
+      - "tests/test_journey_transformer.py"
+      - "docs/JOURNEY_DEVELOPMENT_PROTOCOL.md"
+      - ".github/workflows/sh2026-journey-transformer-dev.yml"
+
+jobs:
+  transformer-journey-development:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      TOKENIZERS_PARALLELISM: "false"
+      DEV_SHA256: a5b89a40d0d0f7be1b3994852fa041c262ee56535d9ef400e50558d00666421b
+      BASE_MODEL: distilbert/distilbert-base-cased
+      BASE_REVISION: 6ea81172465e8b0ad3fddeed32b986cdcdcffcf0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache Hugging Face development model
+        uses: actions/cache@v4
+        with:
+          path: .cache/huggingface
+          key: sh2026-journey-transformer-distilbert-cased-${{ env.BASE_REVISION }}-dev-v1
+
+      - name: Install transformer journey environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install -r requirements-transformers.txt
+          mkdir -p sh2026_outputs/journey_transformer_dev
+          python -m pip freeze > sh2026_outputs/journey_transformer_dev/python_environment.txt
+          python --version > sh2026_outputs/journey_transformer_dev/python_version.txt
+
+      - name: Build and verify frozen journey development corpus
+        run: |
+          python benchmarks/build_journey_dev_v1.py --output sh2026_outputs/journey_transformer_dev/journey_dev_v1.jsonl
+          ACTUAL=$(sha256sum sh2026_outputs/journey_transformer_dev/journey_dev_v1.jsonl | cut -d' ' -f1)
+          test "$ACTUAL" = "$DEV_SHA256"
+
+      - name: Train and evaluate transformer event condition on development split only
+        run: |
+          python scripts/train_sh2026_journey_transformer.py \
+            sh2026_outputs/journey_transformer_dev/journey_dev_v1.jsonl \
+            --base-model "$BASE_MODEL" \
+            --revision "$BASE_REVISION" \
+            --epochs 5 \
+            --batch-size 8 \
+            --learning-rate 5e-5 \
+            --seed 2026 \
+            --max-length 256 \
+            --expected-sha256 "$DEV_SHA256" \
+            --out-dir sh2026_outputs/journey_transformer_dev/run
+          cat sh2026_outputs/journey_transformer_dev/run/training_manifest.json
+          cat sh2026_outputs/journey_transformer_dev/run/dev_journey_summary.json
+
+      - name: Assert formal holdout was not evaluated
+        run: |
+          test ! -e sh2026_outputs/journey_transformer_dev/holdout_v1.jsonl
+          grep -q 'Development-only result' sh2026_outputs/journey_transformer_dev/run/training_manifest.json
+
+      - name: Upload transformer development artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-journey-transformer-development-${{ github.run_id }}
+          path: |
+            sh2026_outputs/journey_transformer_dev/
+            docs/JOURNEY_DEVELOPMENT_PROTOCOL.md
+          if-no-files-found: error
+          retention-days: 30

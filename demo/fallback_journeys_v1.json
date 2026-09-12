@@ -1,0 +1,80 @@
+{
+  "schema_version": "sh2026-demo-fallback-v1",
+  "purpose": "Instructor-curated, public-safe structured journey examples for the conference demo when live LLM access is unavailable. These are teaching fallbacks, not model predictions and not benchmark results.",
+  "examples": {
+    "synthetic_qa_journey": [
+      {
+        "start_location": "Amsterdam",
+        "end_location": "Auschwitz",
+        "transport_mode": "train",
+        "date": null,
+        "journey_reason": null,
+        "evidence_quote": "Later we were deported by train to Auschwitz.",
+        "explicit_or_inferred": {
+          "start_location": "contextual_inference",
+          "end_location": "explicit",
+          "transport_mode": "explicit",
+          "date": "missing",
+          "journey_reason": "missing"
+        },
+        "confidence": null,
+        "notes": []
+      },
+      {
+        "start_location": null,
+        "end_location": "London",
+        "transport_mode": null,
+        "date": null,
+        "journey_reason": null,
+        "evidence_quote": "I travelled to London and found my brother there.",
+        "explicit_or_inferred": {
+          "start_location": "missing",
+          "end_location": "explicit",
+          "transport_mode": "missing",
+          "date": "missing",
+          "journey_reason": "missing"
+        },
+        "confidence": null,
+        "notes": []
+      }
+    ],
+    "synthetic_ambiguous_cambridge": [
+      {
+        "start_location": "Cambridge",
+        "end_location": "London",
+        "transport_mode": null,
+        "date": null,
+        "journey_reason": null,
+        "evidence_quote": "After university I left Cambridge and travelled to London, where I stayed for several months.",
+        "explicit_or_inferred": {
+          "start_location": "explicit",
+          "end_location": "explicit",
+          "transport_mode": "missing",
+          "date": "missing",
+          "journey_reason": "missing"
+        },
+        "confidence": null,
+        "notes": []
+      }
+    ],
+    "synthetic_relational_space": [
+      {
+        "start_location": "the village",
+        "end_location": "the woods beyond the river",
+        "transport_mode": null,
+        "date": "before dawn",
+        "journey_reason": null,
+        "evidence_quote": "We left the village before dawn and hid in the woods beyond the river.",
+        "explicit_or_inferred": {
+          "start_location": "explicit",
+          "end_location": "explicit",
+          "transport_mode": "missing",
+          "date": "explicit",
+          "journey_reason": "missing"
+        },
+        "confidence": null,
+        "notes": []
+      }
+    ]
+  }
+}

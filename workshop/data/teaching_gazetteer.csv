@@ -1,0 +1,10 @@
+text,label,conceptual_level,note
+Penrith,TOPONYM,location,Teaching gazetteer entry for the Lake District passage
+Pooley Bridge,TOPONYM,location,Teaching gazetteer entry for the Lake District passage
+Eamont,TOPONYM,location,Hydrographic name retained as written
+Ulleswater,TOPONYM,location,Historical or variant source spelling must be preserved
+Amsterdam,TOPONYM,location,Synthetic oral-history teaching example
+Auschwitz,TOPONYM,location,Synthetic oral-history teaching example; textual recognition is separate from historical/place resolution
+London,TOPONYM,location,Synthetic teaching examples
+Cambridge,TOPONYM,location,Deliberately ambiguous place name; gazetteer recognition must not imply unique resolution
+Czechoslovakia,TOPONYM,location,Historical polity; do not silently normalize to a present-day country

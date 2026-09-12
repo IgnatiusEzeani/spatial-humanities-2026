@@ -1,0 +1,109 @@
+{
+  "schema_version": "sh2026-ner-teaching-fallback-v1",
+  "purpose": "Precomputed machine output for the public-safe Notebook 03 teaching references. This is a reliability fallback for demonstrating a revision-pinned Hugging Face NER condition; it is not the frozen holdout benchmark and must not be presented as one.",
+  "source": "workshop/data/gold_reference_v0.1.jsonl",
+  "generated_at_utc": "2026-09-11T14:14:55.805837+00:00",
+  "generation_commit": "07f8d271df2593563c4d406684a4b10a95b28445",
+  "model": "dslim/bert-base-NER",
+  "revision": "0b95561fd0c304538b5eb8a0ee532ca24dd009b9",
+  "target_ontology": "TOPONYM",
+  "match": "exact",
+  "records": [
+    {
+      "example_id": "cldw_penrith_pooley_bridge",
+      "title": "Lake District travel writing: Penrith to Pooley Bridge",
+      "text": "From Penrith two roads lead to Pooley Bridge, about six miles distant, which spans the Eamont just at its issue from Ulleswater.",
+      "source_status": "adjudicated_reference",
+      "entities": [
+        {"text":"Penrith","label":"GPE","start_char":5,"end_char":12,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9881,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"},
+        {"text":"Pooley Bridge","label":"GPE","start_char":31,"end_char":44,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9775,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"},
+        {"text":"Eamont","label":"GPE","start_char":87,"end_char":93,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.5871,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"},
+        {"text":"Ulleswater","label":"GPE","start_char":117,"end_char":127,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9842,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"}
+      ],
+      "harmonized_spatial_entities": [
+        {"text":"Penrith","label":"TOPONYM","start_char":5,"end_char":12,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9881,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"},
+        {"text":"Pooley Bridge","label":"TOPONYM","start_char":31,"end_char":44,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9775,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"},
+        {"text":"Eamont","label":"TOPONYM","start_char":87,"end_char":93,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.5871,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"},
+        {"text":"Ulleswater","label":"TOPONYM","start_char":117,"end_char":127,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9842,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"}
+      ],
+      "reference_toponyms": [
+        {"span_id":"s001","layer":"entity","label":"TOPONYM","text":"Penrith","start_char":5,"end_char":12,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"settlement"},"notes":null},
+        {"span_id":"s003","layer":"entity","label":"TOPONYM","text":"Pooley Bridge","start_char":31,"end_char":44,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"settlement_or_crossing_name"},"notes":null},
+        {"span_id":"s005","layer":"entity","label":"TOPONYM","text":"Eamont","start_char":87,"end_char":93,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"hydrographic_feature"},"notes":null},
+        {"span_id":"s006","layer":"entity","label":"TOPONYM","text":"Ulleswater","start_char":117,"end_char":127,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"hydrographic_feature","historical_spelling":true},"notes":"Preserve the source spelling; do not silently normalize it."}
+      ],
+      "exact_score": {"tp":4,"fp":0,"fn":0,"precision":1.0,"recall":1.0,"f1":1.0},
+      "telemetry": {"task":"spatial_entity_recognition","backend":"hf","provider":"huggingface_transformers","model":"dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","latency_ms":85.079,"input_chars":128,"input_tokens_est":32,"output_tokens_est":297,"cost_usd_est":0.0,"success":true,"error":null}
+    },
+    {
+      "example_id": "synthetic_qa_journey",
+      "title": "Synthetic oral-history Q/A journey",
+      "text": "Q: Where did you live before the war?\nA: We lived in Amsterdam near my mother's family. Later we were deported by train to Auschwitz. I remember being very cold.\nQ: What happened after liberation?\nA: I travelled to London and found my brother there.",
+      "source_status": "adjudicated_reference",
+      "entities": [
+        {"text":"Amsterdam","label":"GPE","start_char":53,"end_char":62,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9997,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"},
+        {"text":"Auschwitz","label":"GPE","start_char":123,"end_char":132,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9981,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"},
+        {"text":"London","label":"GPE","start_char":215,"end_char":221,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9996,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"}
+      ],
+      "harmonized_spatial_entities": [
+        {"text":"Amsterdam","label":"TOPONYM","start_char":53,"end_char":62,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9997,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"},
+        {"text":"Auschwitz","label":"TOPONYM","start_char":123,"end_char":132,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9981,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"},
+        {"text":"London","label":"TOPONYM","start_char":215,"end_char":221,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9996,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"}
+      ],
+      "reference_toponyms": [
+        {"span_id":"s001","layer":"entity","label":"TOPONYM","text":"Amsterdam","start_char":53,"end_char":62,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"settlement"},"notes":null},
+        {"span_id":"s005","layer":"entity","label":"TOPONYM","text":"Auschwitz","start_char":123,"end_char":132,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"camp_or_place_name"},"notes":null},
+        {"span_id":"s009","layer":"entity","label":"TOPONYM","text":"London","start_char":215,"end_char":221,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"settlement"},"notes":null}
+      ],
+      "exact_score": {"tp":3,"fp":0,"fn":0,"precision":1.0,"recall":1.0,"f1":1.0},
+      "telemetry": {"task":"spatial_entity_recognition","backend":"hf","provider":"huggingface_transformers","model":"dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","latency_ms":98.952,"input_chars":249,"input_tokens_est":62,"output_tokens_est":223,"cost_usd_est":0.0,"success":true,"error":null}
+    },
+    {
+      "example_id": "synthetic_ambiguous_cambridge",
+      "title": "Ambiguous place resolution",
+      "text": "After university I left Cambridge and travelled to London, where I stayed for several months.",
+      "source_status": "adjudicated_reference",
+      "entities": [
+        {"text":"Cambridge","label":"ORG","start_char":24,"end_char":33,"start_token":null,"end_token":null,"place_type":null,"confidence":0.7962,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"},
+        {"text":"London","label":"GPE","start_char":51,"end_char":57,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9997,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"}
+      ],
+      "harmonized_spatial_entities": [
+        {"text":"London","label":"TOPONYM","start_char":51,"end_char":57,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9997,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"}
+      ],
+      "reference_toponyms": [
+        {"span_id":"s002","layer":"entity","label":"TOPONYM","text":"Cambridge","start_char":24,"end_char":33,"conceptual_level":"location","certainty":"explicit","attributes":{"resolution_expected":"ambiguous"},"notes":"Do not silently assume Cambridge, UK."},
+        {"span_id":"s004","layer":"entity","label":"TOPONYM","text":"London","start_char":51,"end_char":57,"conceptual_level":"location","certainty":"explicit","attributes":{},"notes":null}
+      ],
+      "exact_score": {"tp":1,"fp":0,"fn":1,"precision":1.0,"recall":0.5,"f1":0.666667},
+      "telemetry": {"task":"spatial_entity_recognition","backend":"hf","provider":"huggingface_transformers","model":"dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","latency_ms":55.824,"input_chars":93,"input_tokens_est":23,"output_tokens_est":147,"cost_usd_est":0.0,"success":true,"error":null}
+    },
+    {
+      "example_id": "synthetic_historical_polity",
+      "title": "Historical place-name caution",
+      "text": "In 1938 our family lived in Czechoslovakia. Years later I described the region using the names I knew at the time.",
+      "source_status": "adjudicated_reference",
+      "entities": [
+        {"text":"Czechoslovakia","label":"GPE","start_char":28,"end_char":42,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9997,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9"}
+      ],
+      "harmonized_spatial_entities": [
+        {"text":"Czechoslovakia","label":"TOPONYM","start_char":28,"end_char":42,"start_token":null,"end_token":null,"place_type":"PLACE","confidence":0.9997,"source":"hf:dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_label":"GPE"}
+      ],
+      "reference_toponyms": [
+        {"span_id":"s002","layer":"entity","label":"TOPONYM","text":"Czechoslovakia","start_char":28,"end_char":42,"conceptual_level":"location","certainty":"explicit","attributes":{"subtype":"historical_polity","normalization_policy":"preserve_source_form"},"notes":"A modern-country alias must not overwrite the historical source name."}
+      ],
+      "exact_score": {"tp":1,"fp":0,"fn":0,"precision":1.0,"recall":1.0,"f1":1.0},
+      "telemetry": {"task":"spatial_entity_recognition","backend":"hf","provider":"huggingface_transformers","model":"dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","latency_ms":61.922,"input_chars":114,"input_tokens_est":28,"output_tokens_est":76,"cost_usd_est":0.0,"success":true,"error":null}
+    },
+    {
+      "example_id": "synthetic_relational_space",
+      "title": "Relational and non-cartographic space",
+      "text": "We left the village before dawn and hid in the woods beyond the river. The nearest road was somewhere to our left, but we avoided it.",
+      "source_status": "adjudicated_reference",
+      "entities": [],
+      "harmonized_spatial_entities": [],
+      "reference_toponyms": [],
+      "exact_score": {"tp":0,"fp":0,"fn":0,"precision":1.0,"recall":1.0,"f1":1.0},
+      "telemetry": {"task":"spatial_entity_recognition","backend":"hf","provider":"huggingface_transformers","model":"dslim/bert-base-NER@0b95561fd0c304538b5eb8a0ee532ca24dd009b9","model_revision":"0b95561fd0c304538b5eb8a0ee532ca24dd009b9","latency_ms":69.302,"input_chars":133,"input_tokens_est":33,"output_tokens_est":1,"cost_usd_est":0.0,"success":true,"error":null}
+    }
+  ]
+}

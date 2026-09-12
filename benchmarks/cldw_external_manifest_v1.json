@@ -1,0 +1,39 @@
+{
+  "schema_version": "sh2026-cldw-external-manifest-v1",
+  "purpose": "Independent historical-language validation of named-place recognition after the synthetic SH2026 benchmark was frozen.",
+  "status": "source_selection_and_derived_dataset_frozen",
+  "derived_dataset": {
+    "sha256": "257a463e8dd5b154edb7951c8b8bb6d05f609043db17adaa2324d7290b06836c",
+    "n_passages": 10,
+    "n_gold_toponym_mentions": 43,
+    "extraction_rule_version": "sh2026-cldw-paragraph-v1",
+    "freeze_note": "The source list and deterministic passage-selection rule were fixed before model execution. This checksum was recorded after the first successful deterministic construction and is now a release invariant; model errors did not alter the selected files or passages."
+  },
+  "upstream": {
+    "repository": "UCREL/LakeDistrictCorpus",
+    "commit": "9042811cf590f694f9b635c4bc656ed4f81ca422",
+    "gold_standard_directory": "gold_standard",
+    "license": "CC BY-NC-SA 4.0",
+    "reference": "Rayson et al. (2017), A deeply annotated testbed for geographical text analysis: The Corpus of Lake District Writing"
+  },
+  "selection_policy": {
+    "design": "purposive chronological spread within the existing 28-text CLDW gold-standard subcorpus",
+    "n_source_texts": 10,
+    "model_error_informed_selection": false,
+    "passage_rule": "For each fixed source file, select the first paragraph containing at least two gold <cdplace> annotations and 80-1200 normalized plain-text characters. If none exists, select the first paragraph containing at least one gold <cdplace> annotation in that length range.",
+    "evaluation_scope": "TOPONYM recognition only. This external check does not claim to validate the richer synthetic ontology, journey extraction, affect, or interpretation layers.",
+    "rationale": "The aim is a source-derived generalization check on historical prose/poetry, not a second tunable development set."
+  },
+  "files": [
+    {"path": "gold_standard/Defoe_cqp_4.xml", "blob_sha": "34cce023ba53d045fc00f8f53c5f483271758023"},
+    {"path": "gold_standard/Brown_cqp_10.xml", "blob_sha": "092036da1da8231962151e1beaf28ac98d9a937e"},
+    {"path": "gold_standard/Gray_cqp_13.xml", "blob_sha": "64046e1e81436dda273dde82f9d15353ce9519b4"},
+    {"path": "gold_standard/Cockin_cqp_19.xml", "blob_sha": "6ef261ea43f0bf0e2a7e3ccfb4361b9285c9e147"},
+    {"path": "gold_standard/Coleridge_cqp_33.xml", "blob_sha": "1dcb50effaabd38551e56bcc99c3a01e6f5734a5"},
+    {"path": "gold_standard/Keats_cqp_44.xml", "blob_sha": "8d1433c2695f6254e71d5a37c816ea037bb41bc6"},
+    {"path": "gold_standard/Otley__cqp_49.xml", "blob_sha": "200be726bb793a6a42b255ab8cf1e3ec8ae714da"},
+    {"path": "gold_standard/Clarke_cqp_63.xml", "blob_sha": "afc7c1c1a9622aad92cbfeb611c356cde30a7f5a"},
+    {"path": "gold_standard/Garnett_cqp_62.xml", "blob_sha": "5283e7794d892f9904b254e5475c4d20dc5a5fde"},
+    {"path": "gold_standard/Anon_cqp_66.xml", "blob_sha": "048618679422972458070568264f4c3fcbc79acf"}
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "sh2026-demo-fallback-manifest-v1",
+  "purpose": "Index the public-safe reliability fallbacks used by the SH2026 workshop/demo and keep curated teaching material distinct from precomputed machine output and benchmark evidence.",
+  "assets": [
+    {
+      "id": "journey_curated_v1",
+      "path": "demo/fallback_journeys_v1.json",
+      "kind": "curated_teaching",
+      "source": "public-safe unchanged examples in workshop/data/examples.json",
+      "machine_output": false,
+      "benchmark_result": false,
+      "notes": "Instructor-curated structured journey records used to demonstrate evidence grounding and human review when no live LLM is available."
+    },
+    {
+      "id": "affect_transformer_teaching_v1",
+      "path": "demo/affect_transformer_teaching_fallback_v1.json",
+      "kind": "precomputed_machine_output",
+      "source": "workshop/05_affect_and_events.ipynb",
+      "machine_output": true,
+      "benchmark_result": false,
+      "model": {
+        "sentiment": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+        "sentiment_revision": "3216a57f2a0d9c45a2e6c20157c20c49fb4bf9c7",
+        "emotion": "j-hartmann/emotion-english-distilroberta-base",
+        "emotion_revision": "0e1cd914e3d46199ed785853e12b57304e04178b"
+      },
+      "generation_commit": "6f10e40adc37c5aa75ac1636fa40a1ac66135313",
+      "notes": "Revision-pinned transformer outputs for the five public-safe Notebook 05 teaching passages."
+    },
+    {
+      "id": "ner_transformer_teaching_v1",
+      "path": "demo/ner_transformer_teaching_fallback_v1.json",
+      "kind": "precomputed_machine_output",
+      "source": "workshop/data/gold_reference_v0.1.jsonl",
+      "machine_output": true,
+      "benchmark_result": false,
+      "model": {
+        "name": "dslim/bert-base-NER",
+        "revision": "0b95561fd0c304538b5eb8a0ee532ca24dd009b9"
+      },
+      "generation_commit": "07f8d271df2593563c4d406684a4b10a95b28445",
+      "notes": "Revision-pinned Hugging Face NER outputs for the five public-safe Notebook 03 teaching references."
+    }
+  ],
+  "claim_boundary": "Fallback assets exist for reliability and teaching continuity. They must not be substituted for the frozen formal benchmark or described as held-out benchmark results."
+}

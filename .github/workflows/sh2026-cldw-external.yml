@@ -1,0 +1,139 @@
+name: SH2026 CLDW external validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "benchmarks/cldw_external_manifest_v1.json"
+      - "benchmarks/build_cldw_external_v1.py"
+      - "scripts/run_sh2026_external_ner.py"
+      - "workshop/data/teaching_gazetteer.csv"
+      - "tests/test_cldw_external_builder.py"
+      - ".github/workflows/sh2026-cldw-external.yml"
+
+jobs:
+  external-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      HF_HOME: ${{ github.workspace }}/.cache/huggingface
+      TOKENIZERS_PARALLELISM: "false"
+      CLDW_COMMIT: 9042811cf590f694f9b635c4bc656ed4f81ca422
+      EXPECTED_CLDW_SHA256: 257a463e8dd5b154edb7951c8b8bb6d05f609043db17adaa2324d7290b06836c
+      SH2026_HF_MODEL: dslim/bert-base-NER
+      SH2026_HF_REVISION: 0b95561fd0c304538b5eb8a0ee532ca24dd009b9
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out SH2026 branch
+        uses: actions/checkout@v4
+
+      - name: Check out pinned CLDW corpus
+        uses: actions/checkout@v4
+        with:
+          repository: UCREL/LakeDistrictCorpus
+          ref: ${{ env.CLDW_COMMIT }}
+          path: cldw_upstream
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache revision-pinned Hugging Face model
+        uses: actions/cache@v4
+        with:
+          path: .cache/huggingface
+          key: sh2026-hf-dslim-bert-base-ner-0b95561-v1
+
+      - name: Install external-validation environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+          python -m pip install -r requirements-transformers.txt
+          mkdir -p sh2026_outputs/cldw_external_v1
+          python -m pip freeze > sh2026_outputs/cldw_external_v1/python_environment.txt
+          python --version > sh2026_outputs/cldw_external_v1/python_version.txt
+
+      - name: Verify pinned CLDW checkout
+        run: |
+          test "$(git -C cldw_upstream rev-parse HEAD)" = "$CLDW_COMMIT"
+          echo "CLDW checkout verified at $CLDW_COMMIT"
+          echo "SH2026 branch head recorded as $SH2026_HEAD_SHA"
+
+      - name: Build and checksum source-derived validation passages
+        run: |
+          python benchmarks/build_cldw_external_v1.py \
+            --upstream-root cldw_upstream \
+            --output sh2026_outputs/cldw_external_v1/cldw_external_v1.jsonl
+          cp sh2026_outputs/cldw_external_v1/cldw_external_v1.jsonl.sha256 \
+             sh2026_outputs/cldw_external_v1/dataset_checksum.sha256
+          DATASET_SHA=$(cut -d' ' -f1 sh2026_outputs/cldw_external_v1/dataset_checksum.sha256)
+          test "$DATASET_SHA" = "$EXPECTED_CLDW_SHA256" || {
+            echo "Derived CLDW checksum drifted: expected $EXPECTED_CLDW_SHA256, got $DATASET_SHA" >&2
+            exit 1
+          }
+          echo "Frozen derived CLDW checksum verified: $DATASET_SHA"
+
+      - name: Validate derived gold and provenance
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from spatio_textual.gold import load_gold_jsonl, assert_valid_gold
+
+          path = Path("sh2026_outputs/cldw_external_v1/cldw_external_v1.jsonl")
+          records = load_gold_jsonl(path)
+          assert len(records) == 10, len(records)
+          assert_valid_gold(records)
+          assert all({s["label"] for s in r["spans"]} <= {"TOPONYM"} for r in records)
+          assert all(r["spans"] for r in records)
+          assert sum(len(r["spans"]) for r in records) == 43
+          for record in records:
+              source = record["source"]
+              assert source["upstream_commit"] == "9042811cf590f694f9b635c4bc656ed4f81ca422"
+              assert source["extraction_rule_version"] == "sh2026-cldw-paragraph-v1"
+          print(f"Validated {len(records)} CLDW passages and {sum(len(r['spans']) for r in records)} TOPONYM mentions")
+          PY
+
+      - name: Run common-denominator named-place comparison
+        run: |
+          python scripts/run_sh2026_external_ner.py \
+            sh2026_outputs/cldw_external_v1/cldw_external_v1.jsonl \
+            --methods rules,spacy,spacy_resources,hf \
+            --spacy-model en_core_web_sm \
+            --hf-model "$SH2026_HF_MODEL" \
+            --hf-revision "$SH2026_HF_REVISION" \
+            --expected-sha256 "$EXPECTED_CLDW_SHA256" \
+            --frozen-at-commit "$SH2026_HEAD_SHA" \
+            --out-dir sh2026_outputs/cldw_external_v1/results
+
+      - name: Record external-validation provenance
+        run: |
+          cat > sh2026_outputs/cldw_external_v1/provenance.json <<EOF
+          {
+            "sh2026_branch_head_sha": "$SH2026_HEAD_SHA",
+            "workflow_sha": "$GITHUB_SHA",
+            "cldw_repository": "UCREL/LakeDistrictCorpus",
+            "cldw_commit": "$CLDW_COMMIT",
+            "dataset_sha256": "$EXPECTED_CLDW_SHA256",
+            "selection_manifest": "benchmarks/cldw_external_manifest_v1.json",
+            "selection_rule": "sh2026-cldw-paragraph-v1",
+            "evaluation_scope": "TOPONYM recognition only",
+            "match_policy": "exact_character_span_and_harmonized_TOPONYM_label",
+            "hf_model": "$SH2026_HF_MODEL",
+            "hf_revision": "$SH2026_HF_REVISION"
+          }
+          EOF
+
+      - name: Print external-validation summary
+        run: cat sh2026_outputs/cldw_external_v1/results/comparison_summary.json
+
+      - name: Upload external-validation audit artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-cldw-external-v1-${{ github.run_id }}
+          path: |
+            sh2026_outputs/cldw_external_v1/
+            benchmarks/cldw_external_manifest_v1.json
+            docs/EXTERNAL_VALIDATION_PROTOCOL.md
+          if-no-files-found: error
+          retention-days: 30

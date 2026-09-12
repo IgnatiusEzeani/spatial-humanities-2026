@@ -1,0 +1,78 @@
+name: SH2026 release smoke
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "demo/**"
+      - "tests/test_demo_interactions.py"
+      - "scripts/sh2026_workshop_smoke.py"
+      - "workshop/**"
+      - "requirements-lite.txt"
+      - ".github/workflows/sh2026-release-smoke.yml"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lightweight workshop environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+          python -m pip install pytest
+
+      - name: Exercise demo failure and place-correction controls
+        run: python -m pytest -q tests/test_demo_interactions.py
+
+      - name: Run CPU-safe workshop path end to end
+        run: python scripts/sh2026_workshop_smoke.py
+
+      - name: Start project-scoped SH2026 Streamlit app
+        env:
+          OPENAI_API_KEY: ""
+        run: |
+          streamlit run demo/streamlit_app.py \
+            --server.headless true \
+            --server.address 127.0.0.1 \
+            --server.port 8501 \
+            > /tmp/sh2026-streamlit.log 2>&1 &
+          echo $! > /tmp/sh2026-streamlit.pid
+
+      - name: Verify live Streamlit health endpoint
+        run: |
+          set -e
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health | grep -qi "ok"; then
+              echo "SH2026 Streamlit health check passed"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Streamlit did not become healthy in time"
+          cat /tmp/sh2026-streamlit.log || true
+          exit 1
+
+      - name: Stop Streamlit
+        if: always()
+        run: |
+          if [ -f /tmp/sh2026-streamlit.pid ]; then
+            kill "$(cat /tmp/sh2026-streamlit.pid)" || true
+          fi
+
+      - name: Upload smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-release-smoke-${{ github.run_id }}
+          path: |
+            sh2026_outputs/release_smoke/
+            /tmp/sh2026-streamlit.log
+          if-no-files-found: warn
+          retention-days: 14

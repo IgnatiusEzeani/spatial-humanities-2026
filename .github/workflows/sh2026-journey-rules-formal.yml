@@ -1,0 +1,99 @@
+name: SH2026 rule journey formal
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - "config/journey_rule_scope"
+
+jobs:
+  formal-rule-journey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HOLDOUT_SHA256: be9c526af68230f22cb92507af69d8aacea8cbb5bd7ad5dfcf3d7c16767fdb9b
+      SH2026_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SH2026_SCOPE_FILE: config/journey_rule_scope
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+
+      - name: Resolve formal rule journey trigger
+        shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            SCOPE="formal_holdout"
+          else
+            if ! git diff-tree --no-commit-id --name-only -r HEAD | grep -qx "$SH2026_SCOPE_FILE"; then
+              echo "Latest commit did not change the formal marker; skipping formal journey scoring."
+              exit 0
+            fi
+            SCOPE="$(tr -d '[:space:]' < "$SH2026_SCOPE_FILE")"
+          fi
+          test "$SCOPE" = "formal_holdout" || {
+            echo "Formal rule journey run not armed: $SCOPE"
+            exit 0
+          }
+          echo "SH2026_RUN_FORMAL_RULE_JOURNEY=1" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-python@v5
+        if: env.SH2026_RUN_FORMAL_RULE_JOURNEY == '1'
+        with:
+          python-version: "3.11"
+
+      - name: Install formal rule journey environment
+        if: env.SH2026_RUN_FORMAL_RULE_JOURNEY == '1'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lite.txt
+          mkdir -p sh2026_outputs/journey_rules_formal
+          python -m pip freeze > sh2026_outputs/journey_rules_formal/python_environment.txt
+          python --version > sh2026_outputs/journey_rules_formal/python_version.txt
+
+      - name: Build and verify frozen holdout
+        if: env.SH2026_RUN_FORMAL_RULE_JOURNEY == '1'
+        run: |
+          python benchmarks/build_holdout_v1.py
+          ACTUAL=$(sha256sum benchmarks/holdout_v1.jsonl | cut -d' ' -f1)
+          test "$ACTUAL" = "$HOLDOUT_SHA256"
+
+      - name: Run frozen rule/dependency journey condition
+        if: env.SH2026_RUN_FORMAL_RULE_JOURNEY == '1'
+        run: |
+          python scripts/run_sh2026_rule_journey.py \
+            benchmarks/holdout_v1.jsonl \
+            --spacy-model en_core_web_sm \
+            --benchmark-mode \
+            --frozen-at-commit "$SH2026_HEAD_SHA" \
+            --expected-sha256 "$HOLDOUT_SHA256" \
+            --out-dir sh2026_outputs/journey_rules_formal/results
+          cat sh2026_outputs/journey_rules_formal/results/journey_summary.json
+
+      - name: Record formal provenance
+        if: env.SH2026_RUN_FORMAL_RULE_JOURNEY == '1'
+        run: |
+          cat > sh2026_outputs/journey_rules_formal/provenance.json <<EOF
+          {
+            "method": "rule_dependency_v1",
+            "spacy_model": "en_core_web_sm",
+            "formal_holdout_sha256": "$HOLDOUT_SHA256",
+            "sh2026_branch_head_sha": "$SH2026_HEAD_SHA",
+            "journey_match_policy": "sh2026-journey-match-v1",
+            "journey_field_policy": "sh2026-journey-field-v1",
+            "freeze_note": "formal holdout run triggered only after development workflow was frozen"
+          }
+          EOF
+
+      - name: Upload formal rule journey artifact
+        if: env.SH2026_RUN_FORMAL_RULE_JOURNEY == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sh2026-journey-rules-formal-${{ github.run_id }}
+          path: |
+            sh2026_outputs/journey_rules_formal/
+            docs/JOURNEY_DEVELOPMENT_PROTOCOL.md
+          if-no-files-found: error
+          retention-days: 30
