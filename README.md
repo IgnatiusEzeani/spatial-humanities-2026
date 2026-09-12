@@ -1,45 +1,23 @@
 # Spatial Humanities 2026
 
-Conference-specific research, teaching, benchmarking and demonstration resources
-for Spatial Humanities 2026, hosted at the University of Minho in Braga,
+Conference resources, research, teaching materials, and demonstration tools for
+Spatial Humanities 2026, hosted at the University of Minho in Braga,
 23–25 September 2026.
 
-The reusable Python library is maintained separately in
-[`IgnatiusEzeani/spatio-textual`](https://github.com/IgnatiusEzeani/spatio-textual).
-This repository consumes its public API through a pinned release and contains no
-copy of the package source.
+This project builds on the reusable Python library
+[`IgnatiusEzeani/spatio-textual`](https://github.com/IgnatiusEzeani/spatio-textual),
+which provides core capabilities for spatial annotation, NER, journey extraction,
+affect analysis, and evaluation.
 
-## Project boundary
+## What's included
 
-Use a simple rule when deciding where new code belongs:
+- **Benchmarks**: Curated research corpora and evaluation datasets
+- **Demo**: Interactive Streamlit application showcasing conference themes
+- **Workshops**: Tutorial notebooks and instructional materials
+- **Docs**: Research protocols, results, and keynote evidence
+- **Scripts**: Experiment runners and analysis tools
 
-> If the SH2026 project disappeared tomorrow, would this code still belong in `spatio-textual`?
-
-If yes, it belongs in the reusable package. If no, it belongs here.
-
-Package-level capabilities include generic spatial annotation, NER, journey extraction, affect analysis, model clients, evidence grounding, evaluation primitives, provenance, review, telemetry and visualisation.
-
-SH2026-specific assets include frozen benchmark corpora and checksums, experiment runners/configuration, workshop notebooks, keynote evidence and results, and the conference Streamlit demo.
-
-## Structure
-
-```text
-spatial-humanities-2026/
-├── README.md
-├── ROADMAP.md
-├── benchmarks/        # frozen and development research corpora/builders
-├── config/            # guarded experiment trigger/config files
-├── demo/              # conference-specific Streamlit experience
-├── docs/              # protocols, result records and keynote evidence
-├── scripts/           # SH2026 experiment runners and training scripts
-├── tests/             # project-boundary and SH2026 regression tests
-└── workshop/          # tutorial notebooks, data and instructor material
-```
-
-GitHub Actions workflows are guarded so ordinary documentation and workshop
-edits do not repeat paid conference experiments.
-
-## Run the conference demo locally
+## Quick start: Run the demo
 
 From the repository root:
 
@@ -48,17 +26,32 @@ python -m pip install -r requirements-lite.txt
 streamlit run demo/streamlit_app.py
 ```
 
-The public-safe guided path does not require an API key. Live LLM journey extraction is optional and uses a server-side `OPENAI_API_KEY` when configured.
+The demo includes a guided public path that requires no API keys. Optional live LLM
+features are available when configured with an `OPENAI_API_KEY`.
 
-## Release relationship
+## Repository structure
 
-The intended release relationship is:
+```text
+spatial-humanities-2026/
+├── README.md
+├── ROADMAP.md
+├── benchmarks/        # Research corpora and datasets
+├── config/            # Experiment configuration
+├── demo/              # Streamlit application
+├── docs/              # Research protocols and results
+├── scripts/           # Experiment and analysis tools
+├── tests/             # Regression tests
+└── workshop/          # Tutorial notebooks and materials
+```
 
-- **spatio-textual**: reusable Python package, independently versioned and documented.
-- **SH2026 resources**: reproducible research/teaching layer pinned to a known package release or commit.
+## About the research
 
-The SH2026 benchmark results are not package guarantees. They are project-specific empirical results with explicit provenance and claim boundaries.
+The Spatial Humanities 2026 project combines spatial analysis with textual interpretation
+to explore how location, movement, and affect shape meaning. This conference brings
+together researchers, practitioners, and students working at the intersection of
+geography, humanities, and computational methods.
 
-## SH2026 completion gate
+## Learn more
 
-Before the conference release is considered ready, the project should have: the NER, journey and affect comparison rows frozen; the package/project boundary regression-tested; all ten workshop notebooks passing in a clean CPU environment; the project-scoped Streamlit health check passing without an API key; package tests and compatibility checks green; and the deployed demo rehearsed using only public-safe material.
+- [Project roadmap](ROADMAP.md) — planned work and milestones
+- [spatio-textual library](https://github.com/IgnatiusEzeani/spatio-textual) — core Python package
