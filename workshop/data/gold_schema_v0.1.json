@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/IgnatiusEzeani/spatial-humanities-2026/blob/sh2026-workshop-v1.0.0/workshop/data/gold_schema_v0.1.json",
+  "$id": "https://github.com/IgnatiusEzeani/spatial-humanities-2026/blob/main/workshop/data/gold_schema_v0.1.json",
   "title": "SH2026 Gold Reference Record",
   "description": "Machine-readable companion to docs/GOLD_ANNOTATION_GUIDE.md. Runtime validation remains available without jsonschema via spatio_textual.gold.",
   "type": "object",

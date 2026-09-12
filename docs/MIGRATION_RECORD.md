@@ -21,8 +21,9 @@ The standalone Spatial Humanities 2026 repository was extracted from
   `fcd985d1727bb924d1b01a91166a1f792f7e15cf2ebf6f126d85eff1ac195453`.
 - The deterministic journey development checksum is
   `34ce7c9d30739d0c051697ab7860d4fa5cf78c09e8d9efe02a9ce766860d95ec`.
-- All workshop notebooks use one setup module and target the standalone repository's
-  `sh2026-workshop-v1.0.0` release tag.
+- All workshop notebooks use one setup module. During rehearsal they target the
+  standalone repository's `main` branch and the exact package-candidate commit;
+  both references will move to release tags only after the release gates pass.
 
 The checksum changes are caused by the intentional schema-identifier migration,
 not by changes to the underlying teaching or benchmark source passages.

@@ -1,4 +1,4 @@
-spatio-textual[app] @ git+https://github.com/IgnatiusEzeani/spatio-textual.git@v0.4.0
+spatio-textual[app] @ git+https://github.com/IgnatiusEzeani/spatio-textual.git@d91d32977924f2cf6fc826b01a77463f8c30267a
 matplotlib>=3.8
 pytest>=8
 tqdm>=4.66
