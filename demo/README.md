@@ -11,8 +11,7 @@ The humanities-facing product question is:
 From the repository root, the offline-safe/default path is:
 
 ```bash
-python -m pip install -e '.[app]'
-python -m spacy download en_core_web_sm
+python -m pip install -r requirements.txt
 streamlit run demo/streamlit_app.py
 ```
 
