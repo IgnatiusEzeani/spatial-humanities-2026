@@ -14,7 +14,7 @@ from dataclasses import dataclass
 WORKSHOP_REPO = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
 WORKSHOP_REF = "main"
 PACKAGE_VERSION = "0.4.0"
-PACKAGE_REF = "d91d32977924f2cf6fc826b01a77463f8c30267a"
+PACKAGE_REF = "v0.4.0"
 COLAB_ROOT = pathlib.Path("/content")
 
 
