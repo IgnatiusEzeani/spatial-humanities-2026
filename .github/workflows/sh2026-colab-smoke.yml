@@ -27,7 +27,11 @@ jobs:
           # path at the checked-out PR commit so smoke tests cannot accidentally
           # clone and execute the older release branch instead of the code under review.
           ln -sfn "$GITHUB_WORKSPACE" /content/spatial-humanities-2026
+          # nbconvert executes each notebook from workshop/, so its bootstrap falls
+          # back to /content/sh2026_setup.py. Keep that file on the PR commit too.
+          ln -sfn "$GITHUB_WORKSPACE/workshop/sh2026_setup.py" /content/sh2026_setup.py
           test "$(readlink -f /content/spatial-humanities-2026)" = "$(readlink -f "$GITHUB_WORKSPACE")"
+          test "$(readlink -f /content/sh2026_setup.py)" = "$(readlink -f "$GITHUB_WORKSPACE/workshop/sh2026_setup.py")"
           python -m pip install --upgrade pip
           python -m pip install -r requirements-lite.txt nbconvert ipykernel
           mkdir -p sh2026_outputs/notebook_smoke
