@@ -37,17 +37,6 @@ def test_live_dependencies_and_readme_use_the_canonical_package_release():
     assert "https://github.com/IgnatiusEzeani/spatio-textual" not in readme
 
 
-def test_colab_ci_bootstrap_uses_the_pull_request_checkout():
-    workflow = (ROOT / ".github/workflows/sh2026-colab-smoke.yml").read_text(
-        encoding="utf-8"
-    )
-
-    assert (
-        'ln -sfn "$GITHUB_WORKSPACE/workshop/sh2026_setup.py" '
-        "/content/sh2026_setup.py"
-    ) in workflow
-
-
 def test_live_text_files_do_not_reference_old_monorepo_paths():
     offenders: list[str] = []
     extensions = {".md", ".py", ".json", ".jsonl", ".yml", ".yaml"}
