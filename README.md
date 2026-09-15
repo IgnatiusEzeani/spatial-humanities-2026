@@ -5,7 +5,7 @@ Spatial Humanities 2026, hosted at the University of Minho in Braga,
 23–25 September 2026.
 
 This project builds on the reusable Python library
-[`IgnatiusEzeani/spatio-textual`](https://github.com/IgnatiusEzeani/spatio-textual),
+[`SpaceTimeNarratives/spatio-textual`](https://github.com/SpaceTimeNarratives/spatio-textual),
 which provides core capabilities for spatial annotation, NER, journey extraction,
 affect analysis, and evaluation.
 
@@ -54,4 +54,4 @@ geography, humanities, and computational methods.
 ## Learn more
 
 - [Project roadmap](ROADMAP.md) — planned work and milestones
-- [spatio-textual library](https://github.com/IgnatiusEzeani/spatio-textual) — core Python package
+- [spatio-textual library](https://github.com/SpaceTimeNarratives/spatio-textual) — core Python package
