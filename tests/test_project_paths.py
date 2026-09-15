@@ -5,6 +5,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_PACKAGE_REPOSITORY = "SpaceTimeNarratives/spatio-textual"
+CANONICAL_PACKAGE_TAG = "v0.4.1"
 OLD_MONOREPO_MARKERS = (
     "projects/sh2026/",
     "tutorials/sh2026/",
@@ -20,6 +22,19 @@ def test_conference_repository_does_not_vendor_the_package():
 def test_required_project_directories_exist():
     for name in ("benchmarks", "config", "demo", "docs", "scripts", "tests", "workshop"):
         assert (ROOT / name).is_dir(), name
+
+
+def test_live_dependencies_and_readme_use_the_canonical_package_release():
+    requirement = (ROOT / "requirements-lite.txt").read_text(encoding="utf-8")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    expected_pin = (
+        f"git+https://github.com/{CANONICAL_PACKAGE_REPOSITORY}.git"
+        f"@{CANONICAL_PACKAGE_TAG}"
+    )
+
+    assert expected_pin in requirement
+    assert f"https://github.com/{CANONICAL_PACKAGE_REPOSITORY}" in readme
+    assert "https://github.com/IgnatiusEzeani/spatio-textual" not in readme
 
 
 def test_live_text_files_do_not_reference_old_monorepo_paths():

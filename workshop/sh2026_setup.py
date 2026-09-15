@@ -13,8 +13,8 @@ from dataclasses import dataclass
 
 WORKSHOP_REPO = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
 WORKSHOP_REF = "main"
-PACKAGE_VERSION = "0.4.0"
-PACKAGE_REF = "v0.4.0"
+PACKAGE_VERSION = "0.4.1"
+PACKAGE_REF = "v0.4.1"
 COLAB_ROOT = pathlib.Path("/content")
 
 
