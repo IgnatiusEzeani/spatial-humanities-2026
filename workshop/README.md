@@ -165,20 +165,6 @@ sh2026_outputs/
 
 Outputs should follow `docs/COMMON_SCHEMA.md` so selected tables and figures can be reused directly in the hosted demo and keynote.
 
-## Reliability and release gates
-
-Every release candidate must:
-
-- execute all ten default notebook paths on CPU without participant API keys;
-- provide a documented fallback for heavyweight/API-dependent sections;
-- be safe to re-run from the top without leaking credentials;
-- record model/backend/version information for empirical outputs;
-- preserve public-safe data boundaries;
-- pass the current-head automated smoke suite;
-- pass at least one fresh manual Google Colab rehearsal.
-
-The operational go/no-go checklist is `docs/RELEASE_CHECKLIST.md`.
-
 ## Instructor and fallback package
 
 `INSTRUCTOR_GUIDE.md` provides the delivery sequence, troubleshooting guidance, no-network/no-API routes and 5-minute/15-minute contingencies. The fallback package is now explicit and provenance-indexed in `demo/fallback_manifest_v1.json`:
@@ -187,18 +173,8 @@ The operational go/no-go checklist is `docs/RELEASE_CHECKLIST.md`.
 - `ner_transformer_teaching_fallback_v1.json`: real revision-pinned Hugging Face NER output for Notebook 03;
 - `affect_transformer_teaching_fallback_v1.json`: real revision-pinned transformer affect output for Notebook 05.
 
-Notebook 06 already has a deterministic no-API teaching client, so we do **not** manufacture a fake LLM fallback simply to populate the package. A future retained live-LLM output should be added only if it is genuinely needed and provenance-complete.
-
-## Current implementation block
-
-1. Keep a stable current head and allow the full CI suite, especially `SH2026 Colab notebook smoke`, to finish.
-2. Use `benchmarks/results_snapshot_v1.json` as the single reportable metric feed for the conference demo/keynote; fallback files are teaching/reliability assets, not benchmark substitutes.
-3. Run one fresh manual Google Colab rehearsal of all ten notebooks from the release candidate and record it in the release checklist.
-4. Rehearse the hosted Streamlit demo from a clean/private browser with no API key, then optionally with server-side live LLM access.
-5. Capture the presentation contingency package: local critical notebooks/figures plus screenshots or a short recorded demo walkthrough.
-6. Freeze the RC identity/tag only after those gates pass.
-
-The workshop core and the heavyweight teaching fallback package are structurally complete. The remaining work is release validation and presentation rehearsal, not further notebook construction.
+Notebook 06 uses a deterministic no-API teaching client and clearly distinguishes
+that teaching mechanism from empirical LLM output.
 
 
 ## Open and test in Colab
