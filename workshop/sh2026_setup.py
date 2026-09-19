@@ -130,11 +130,23 @@ def setup(fast_mode: bool = True, quiet: bool = False, extras: str = "") -> Cont
     else:
         print(f"Installing from {req.name} ... 1 to 2 minutes. "
               f"Good moment to read the next markdown cell.")
-        subprocess.run(
-            [sys.executable, "-m", "pip", "install", "-q", "-r", str(req)],
-            check=True,
+        # Do NOT swallow pip's output. A failed install used to surface as a
+        # bare CalledProcessError with the reason hidden, which is useless in a
+        # room of thirty people. Show what pip actually said, and carry on: a
+        # partial environment is often enough for the first two blocks, and the
+        # instructor can decide rather than the script.
+        proc = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "-r", str(req)],
+            capture_output=True, text=True,
         )
-        marker.write_text(want)
+        if proc.returncode != 0:
+            tail = (proc.stderr or proc.stdout or "").strip().splitlines()
+            print("\n  ! pip failed. The last lines were:\n")
+            for line in tail[-12:]:
+                print("     ", line)
+            print("\n  Continuing anyway. If an import fails later, this is why.")
+        else:
+            marker.write_text(want)
 
     commit = subprocess.run(
         ["git", "rev-parse", "--short", "HEAD"],
