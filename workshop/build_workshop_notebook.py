@@ -234,31 +234,43 @@ Do not type anything yet. With the person next to you, decide:
 
 The third question is where annotation projects actually spend their time.""")
 
-    guide("Records your annotation. Each entry is the exact text you want to mark.",
-          "Python locates your phrases in the passage and computes the character "
-          "offsets. You never type a number, and you cannot be wrong about a "
-          "position, only about a phrase.",
-          "Your spans highlighted in the passage, with a colour per label.",
-          "Add or remove entries below, then re-run. Try marking `the road` as "
-          "GEONOUN and see what happens to the boundary later.")
-    code("""# ── EDIT THIS ────────────────────────────────────────────────────────
-my_annotation = [
-    ("Penrith",      "TOPONYM"),
-    ("road",         "GEONOUN"),
-    # add your own here
-]
-# ─────────────────────────────────────────────────────────────────────
+    guide("Point-and-click annotation: choose the first and last word of each "
+          "span, then a label.",
+          "You never type a phrase, so you never fight a typo. More to the point, "
+          "picking an end word IS the boundary decision: does `Lowther Hall` "
+          "include `Hall`? Answer it by choosing a different end word.",
+          "Three dropdowns and three buttons. Your spans appear highlighted in "
+          "the passage below them, and update as you add.",
+          "Mark three or four spans. Try `Lowther Hall` both ways and see which "
+          "you would defend.")
+    code("""from workshop_support.annotate import annotation_widget
+from workshop_support.display import show_spans
 
-participant_spans = []
-for phrase, label in my_annotation:
-    i = text.find(phrase)
-    if i < 0:
-        print(f"  not found, check the spelling: {phrase!r}")
-        continue
-    participant_spans.append({"start_char": i, "end_char": i + len(phrase),
-                              "label": label, "text": phrase})
+annotator = annotation_widget(text, renderer=show_spans)""")
 
-show_spans(text, participant_spans, title="Your annotation")""")
+    guide("Reads your spans out of the widget.",
+          "The widget holds character offsets, not phrases, so nothing has to be "
+          "located in the text again. This is the same representation the models "
+          "produce, which is what makes the comparison later possible at all.",
+          "A list of what you marked.")
+    code("""participant_spans = annotator.spans
+
+for s in participant_spans:
+    print(f'  {s["text"]!r:28s} {s["label"]:9s} [{s["start_char"]}:{s["end_char"]}]')
+if not participant_spans:
+    print("  nothing marked yet. Use the widget above, then re-run this cell.")""")
+
+    md("""> **If the widget does not appear**, Colab occasionally declines to render
+> ipywidgets. Use the typed route instead, which does the same job:
+>
+> ```python
+> from workshop_support.annotate import manual_annotation
+> participant_spans = manual_annotation(text, [
+>     ("Penrith", "TOPONYM"),
+>     ("road",    "GEONOUN"),
+> ])
+> show_spans(text, participant_spans, title="Your annotation")
+> ```""")
 
     md("""### Exercise B: predict before you look
 
