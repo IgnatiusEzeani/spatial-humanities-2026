@@ -7,3 +7,16 @@ sh2026_outputs/
 .sh2026-installed-*
 .env
 *:Zone.Identifier
+
+# LD80 gold standard: canonical copy lives in github.com/UCREL/LakeDistrictCorpus
+panel/LD80 gold_standard/
+panel/Full_LD_metadata.xlsx
+panel/Manifest.txt
+panel/Manifest_updated.csv
+
+# run artefacts, not results
+panel/panel_run.log
+panel/stratum_C_passages.txt
+panel/queue_*.jsonl
+panel/.sh2026_installed
+*:Zone.Identifier
