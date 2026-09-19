@@ -42,7 +42,7 @@ REPO_URL = "https://github.com/IgnatiusEzeani/spatio-textual.git"
 
 # Pin a TAG for the workshop, not a branch. A branch can move under a
 # participant mid-session; a tag cannot. Freeze this after the release gates pass.
-REF = "main"
+REF = "sh2026-workshop"
 
 COLAB_ROOT = pathlib.Path("/content")
 
