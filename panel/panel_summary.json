@@ -1,0 +1,54 @@
+{
+  "run_id": "panel_v1_openrouter",
+  "fingerprint": "8a278e0f2bef4005",
+  "n_passages": 399,
+  "n_clusters": 2264,
+  "n_unanimous": 2,
+  "n_contested": 2262,
+  "adjudication_burden": 0.9991,
+  "agreement_distribution": {
+    "1": 211,
+    "2": 331,
+    "3": 575,
+    "4": 544,
+    "5": 333,
+    "6": 204,
+    "7": 62,
+    "8": 4
+  },
+  "voter_profiles": {
+    "gpt_5_6_sol": {
+      "accuracy": 0.9262,
+      "coverage": 0.6666
+    },
+    "claude": {
+      "accuracy": 0.9513,
+      "coverage": 0.9284
+    },
+    "gemini_2_5": {
+      "accuracy": 0.9313,
+      "coverage": 0.9336
+    },
+    "qwen_large": {
+      "accuracy": 0.904,
+      "coverage": 0.6232
+    },
+    "hf_bert_ner": {
+      "accuracy": 0.2,
+      "coverage": 0.2748
+    },
+    "spacy_trf_hybrid": {
+      "accuracy": 0.4809,
+      "coverage": 0.6027
+    },
+    "spacy_trf_bare": {
+      "accuracy": 0.3722,
+      "coverage": 0.3722
+    },
+    "rules_gazetteer": {
+      "accuracy": 0.5274,
+      "coverage": 0.4435
+    }
+  },
+  "ungrounded_quotes": 0
+}

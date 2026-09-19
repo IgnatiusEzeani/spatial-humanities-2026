@@ -6,3 +6,4 @@ __pycache__/
 sh2026_outputs/
 .sh2026-installed-*
 .env
+*:Zone.Identifier

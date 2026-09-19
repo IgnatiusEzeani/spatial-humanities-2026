@@ -1,0 +1,24 @@
+399 passages · fingerprint 8a278e0f2bef4005
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2627.13it/s]
+[transformers] [1mBertForTokenClassification LOAD REPORT[0m from: dslim/bert-base-NER
+Key                      | Status     |  | 
+-------------------------+------------+--+-
+bert.pooler.dense.weight | UNEXPECTED |  | 
+bert.pooler.dense.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+5 voters: gpt_5_6_sol, claude, gemini_2_5, qwen_large, hf_bert_ner
+
+run complete · 90 ungrounded quotes
+
+2181 decision items · 33 unanimous (2%) · 2148 contested (98%)
+
+voter profiles (estimated WITHOUT gold):
+  claude           accuracy 0.948  coverage 0.919
+  gemini_2_5       accuracy 0.941  coverage 0.929
+  gpt_5_6_sol      accuracy 0.941  coverage 0.665
+  qwen_large       accuracy 0.892  coverage 0.600
+  hf_bert_ner      accuracy 0.200  coverage 0.274
+
+You now adjudicate 33 + 2148 items, and read 25 passages for stratum C.

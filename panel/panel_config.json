@@ -1,0 +1,44 @@
+{
+  "_comment": "SH2026 annotation panel. FREEZE THIS FILE before running. Every `revision` must be an exact snapshot string, not a family name: a bare name cannot be reproduced in two years. `excluded_passages` implements the contamination rule (a model must not vote on passages it generated).",
+  "prompt_version": "sh2026-panel-v1",
+  "run_id": "panel_v1",
+  "voters": [
+    {
+      "name": "gpt_5_6_sol",
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "revision": "FILL IN exact snapshot string from the API response",
+      "api_key_env": "OPENAI_API_KEY",
+      "temperature": 0.0,
+      "seed": 2026,
+      "excluded_passages": []
+    },
+    {
+      "name": "claude",
+      "provider": "anthropic",
+      "model": "claude-opus-5",
+      "revision": "FILL IN exact model id returned by the API",
+      "api_key_env": "ANTHROPIC_API_KEY",
+      "temperature": 0.0
+    },
+    {
+      "name": "gemini_2_5",
+      "provider": "gemini",
+      "model": "gemini-2.5-pro",
+      "revision": "FILL IN exact model version string",
+      "api_key_env": "GOOGLE_API_KEY",
+      "temperature": 0.0
+    },
+{"name": "qwen_large", "provider": "openrouter", "model": "qwen/qwen3.5-27b",
+ "revision": "FILL IN", "api_key_env": "OPENROUTER_API_KEY",
+ "quantizations": ["fp16", "bf16"], "allow_fallbacks": false},
+
+{"name": "small_open", "provider": "openrouter", "model": "qwen/qwen3.5-9b",
+ "revision": "FILL IN", "api_key_env": "OPENROUTER_API_KEY",
+ "quantizations": ["fp16", "bf16"], "allow_fallbacks": false}
+  ],
+  "non_generative": {
+    "hf_ner": {"model_id": "dslim/bert-base-NER", "revision": "FILL IN commit sha"},
+    "rules":  {"revision": "gazetteer_v1"}
+  }
+}

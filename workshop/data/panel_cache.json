@@ -1,0 +1,739 @@
+{
+ "ld80_victorian_6a5160a116": {
+  "BERT NER (2019, pinned)": [
+   {
+    "start_char": 66,
+    "end_char": 78,
+    "label": "TOPONYM",
+    "text": "Derwentwater"
+   },
+   {
+    "start_char": 94,
+    "end_char": 112,
+    "label": "TOPONYM",
+    "text": "Bassenthwaite Lake"
+   },
+   {
+    "start_char": 165,
+    "end_char": 174,
+    "label": "TOPONYM",
+    "text": "Thirlmere"
+   },
+   {
+    "start_char": 209,
+    "end_char": 222,
+    "label": "TOPONYM",
+    "text": "Newlands Vale"
+   }
+  ],
+  "spaCy trf + gazetteers": [
+   {
+    "start_char": 66,
+    "end_char": 78,
+    "label": "TOPONYM",
+    "text": "Derwentwater"
+   },
+   {
+    "start_char": 136,
+    "end_char": 146,
+    "label": "TOPONYM",
+    "text": "Borrowdale"
+   },
+   {
+    "start_char": 165,
+    "end_char": 174,
+    "label": "TOPONYM",
+    "text": "Thirlmere"
+   }
+  ],
+  "Qwen 3.5 27B (open weight)": [
+   {
+    "start_char": 66,
+    "end_char": 78,
+    "label": "TOPONYM",
+    "text": "Derwentwater"
+   },
+   {
+    "start_char": 94,
+    "end_char": 112,
+    "label": "TOPONYM",
+    "text": "Bassenthwaite Lake"
+   },
+   {
+    "start_char": 136,
+    "end_char": 146,
+    "label": "TOPONYM",
+    "text": "Borrowdale"
+   },
+   {
+    "start_char": 165,
+    "end_char": 174,
+    "label": "TOPONYM",
+    "text": "Thirlmere"
+   },
+   {
+    "start_char": 209,
+    "end_char": 222,
+    "label": "TOPONYM",
+    "text": "Newlands Vale"
+   }
+  ],
+  "GPT-5.6-sol": [
+   {
+    "start_char": 66,
+    "end_char": 78,
+    "label": "TOPONYM",
+    "text": "Derwentwater"
+   },
+   {
+    "start_char": 94,
+    "end_char": 112,
+    "label": "TOPONYM",
+    "text": "Bassenthwaite Lake"
+   },
+   {
+    "start_char": 136,
+    "end_char": 146,
+    "label": "TOPONYM",
+    "text": "Borrowdale"
+   },
+   {
+    "start_char": 165,
+    "end_char": 174,
+    "label": "TOPONYM",
+    "text": "Thirlmere"
+   },
+   {
+    "start_char": 209,
+    "end_char": 222,
+    "label": "TOPONYM",
+    "text": "Newlands Vale"
+   }
+  ],
+  "Claude Opus 5": [
+   {
+    "start_char": 66,
+    "end_char": 78,
+    "label": "TOPONYM",
+    "text": "Derwentwater"
+   },
+   {
+    "start_char": 94,
+    "end_char": 112,
+    "label": "TOPONYM",
+    "text": "Bassenthwaite Lake"
+   },
+   {
+    "start_char": 136,
+    "end_char": 146,
+    "label": "TOPONYM",
+    "text": "Borrowdale"
+   },
+   {
+    "start_char": 165,
+    "end_char": 174,
+    "label": "TOPONYM",
+    "text": "Thirlmere"
+   },
+   {
+    "start_char": 209,
+    "end_char": 222,
+    "label": "TOPONYM",
+    "text": "Newlands Vale"
+   }
+  ],
+  "Gemini 2.5 Pro": [
+   {
+    "start_char": 66,
+    "end_char": 78,
+    "label": "TOPONYM",
+    "text": "Derwentwater"
+   },
+   {
+    "start_char": 94,
+    "end_char": 112,
+    "label": "TOPONYM",
+    "text": "Bassenthwaite Lake"
+   },
+   {
+    "start_char": 136,
+    "end_char": 146,
+    "label": "TOPONYM",
+    "text": "Borrowdale"
+   },
+   {
+    "start_char": 165,
+    "end_char": 174,
+    "label": "TOPONYM",
+    "text": "Thirlmere"
+   },
+   {
+    "start_char": 209,
+    "end_char": 222,
+    "label": "TOPONYM",
+    "text": "Newlands Vale"
+   }
+  ]
+ },
+ "ld80_victorian_512be44529": {
+  "BERT NER (2019, pinned)": [],
+  "spaCy trf + gazetteers": [],
+  "Qwen 3.5 27B (open weight)": [],
+  "GPT-5.6-sol": [],
+  "Claude Opus 5": [],
+  "Gemini 2.5 Pro": []
+ },
+ "ld80_regency_romantic_4d879b98c6": {
+  "BERT NER (2019, pinned)": [
+   {
+    "start_char": 5,
+    "end_char": 14,
+    "label": "TOPONYM",
+    "text": "Helvellyn"
+   },
+   {
+    "start_char": 18,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   },
+   {
+    "start_char": 45,
+    "end_char": 54,
+    "label": "TOPONYM",
+    "text": "Breakfast"
+   },
+   {
+    "start_char": 102,
+    "end_char": 106,
+    "label": "TOPONYM",
+    "text": "Lake"
+   },
+   {
+    "start_char": 154,
+    "end_char": 158,
+    "label": "TOPONYM",
+    "text": "Fall"
+   }
+  ],
+  "spaCy trf + gazetteers": [
+   {
+    "start_char": 5,
+    "end_char": 14,
+    "label": "TOPONYM",
+    "text": "Helvellyn"
+   },
+   {
+    "start_char": 18,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   },
+   {
+    "start_char": 45,
+    "end_char": 54,
+    "label": "TOPONYM",
+    "text": "Breakfast"
+   }
+  ],
+  "Qwen 3.5 27B (open weight)": [
+   {
+    "start_char": 5,
+    "end_char": 14,
+    "label": "TOPONYM",
+    "text": "Helvellyn"
+   },
+   {
+    "start_char": 18,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   },
+   {
+    "start_char": 150,
+    "end_char": 170,
+    "label": "TOPONYM",
+    "text": "the Fall of Low-dore"
+   }
+  ],
+  "GPT-5.6-sol": [
+   {
+    "start_char": 5,
+    "end_char": 14,
+    "label": "TOPONYM",
+    "text": "Helvellyn"
+   },
+   {
+    "start_char": 18,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   },
+   {
+    "start_char": 150,
+    "end_char": 170,
+    "label": "TOPONYM",
+    "text": "the Fall of Low-dore"
+   }
+  ],
+  "Claude Opus 5": [
+   {
+    "start_char": 5,
+    "end_char": 14,
+    "label": "TOPONYM",
+    "text": "Helvellyn"
+   },
+   {
+    "start_char": 18,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   },
+   {
+    "start_char": 150,
+    "end_char": 170,
+    "label": "TOPONYM",
+    "text": "the Fall of Low-dore"
+   }
+  ],
+  "Gemini 2.5 Pro": [
+   {
+    "start_char": 150,
+    "end_char": 170,
+    "label": "TOPONYM",
+    "text": "the Fall of Low-dore"
+   }
+  ]
+ },
+ "ld80_long_18c_e0537eed45": {
+  "BERT NER (2019, pinned)": [
+   {
+    "start_char": 94,
+    "end_char": 101,
+    "label": "TOPONYM",
+    "text": "Keſwick"
+   }
+  ],
+  "spaCy trf + gazetteers": [
+   {
+    "start_char": 29,
+    "end_char": 39,
+    "label": "TOPONYM",
+    "text": "Caſtlerigg"
+   },
+   {
+    "start_char": 94,
+    "end_char": 101,
+    "label": "TOPONYM",
+    "text": "Keſwick"
+   }
+  ],
+  "Qwen 3.5 27B (open weight)": [
+   {
+    "start_char": 14,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Naddle-fell"
+   },
+   {
+    "start_char": 29,
+    "end_char": 39,
+    "label": "TOPONYM",
+    "text": "Caſtlerigg"
+   },
+   {
+    "start_char": 86,
+    "end_char": 101,
+    "label": "TOPONYM",
+    "text": "vale of Keſwick"
+   }
+  ],
+  "GPT-5.6-sol": [
+   {
+    "start_char": 14,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Naddle-fell"
+   },
+   {
+    "start_char": 29,
+    "end_char": 39,
+    "label": "TOPONYM",
+    "text": "Caſtlerigg"
+   },
+   {
+    "start_char": 94,
+    "end_char": 101,
+    "label": "TOPONYM",
+    "text": "Keſwick"
+   }
+  ],
+  "Claude Opus 5": [
+   {
+    "start_char": 14,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Naddle-fell"
+   },
+   {
+    "start_char": 29,
+    "end_char": 39,
+    "label": "TOPONYM",
+    "text": "Caſtlerigg"
+   },
+   {
+    "start_char": 94,
+    "end_char": 101,
+    "label": "TOPONYM",
+    "text": "Keſwick"
+   }
+  ],
+  "Gemini 2.5 Pro": [
+   {
+    "start_char": 14,
+    "end_char": 25,
+    "label": "TOPONYM",
+    "text": "Naddle-fell"
+   },
+   {
+    "start_char": 29,
+    "end_char": 39,
+    "label": "TOPONYM",
+    "text": "Caſtlerigg"
+   },
+   {
+    "start_char": 86,
+    "end_char": 101,
+    "label": "TOPONYM",
+    "text": "vale of Keſwick"
+   }
+  ]
+ },
+ "ld80_victorian_387e1d9cef": {
+  "BERT NER (2019, pinned)": [
+   {
+    "start_char": 29,
+    "end_char": 44,
+    "label": "TOPONYM",
+    "text": "Southwaite Moss"
+   },
+   {
+    "start_char": 68,
+    "end_char": 75,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   },
+   {
+    "start_char": 213,
+    "end_char": 216,
+    "label": "TOPONYM",
+    "text": "St."
+   }
+  ],
+  "spaCy trf + gazetteers": [
+   {
+    "start_char": 29,
+    "end_char": 44,
+    "label": "TOPONYM",
+    "text": "Southwaite Moss"
+   },
+   {
+    "start_char": 68,
+    "end_char": 75,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   }
+  ],
+  "Qwen 3.5 27B (open weight)": [
+   {
+    "start_char": 29,
+    "end_char": 44,
+    "label": "TOPONYM",
+    "text": "Southwaite Moss"
+   },
+   {
+    "start_char": 68,
+    "end_char": 75,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   }
+  ],
+  "GPT-5.6-sol": [
+   {
+    "start_char": 29,
+    "end_char": 44,
+    "label": "TOPONYM",
+    "text": "Southwaite Moss"
+   },
+   {
+    "start_char": 68,
+    "end_char": 75,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   }
+  ],
+  "Claude Opus 5": [
+   {
+    "start_char": 29,
+    "end_char": 44,
+    "label": "TOPONYM",
+    "text": "Southwaite Moss"
+   },
+   {
+    "start_char": 68,
+    "end_char": 75,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   }
+  ],
+  "Gemini 2.5 Pro": [
+   {
+    "start_char": 29,
+    "end_char": 44,
+    "label": "TOPONYM",
+    "text": "Southwaite Moss"
+   },
+   {
+    "start_char": 68,
+    "end_char": 75,
+    "label": "TOPONYM",
+    "text": "Keswick"
+   }
+  ]
+ },
+ "ld80_long_18c_cf5aec5784": {
+  "BERT NER (2019, pinned)": [
+   {
+    "start_char": 13,
+    "end_char": 20,
+    "label": "TOPONYM",
+    "text": "Penrith"
+   },
+   {
+    "start_char": 41,
+    "end_char": 46,
+    "label": "TOPONYM",
+    "text": "Shapp"
+   },
+   {
+    "start_char": 96,
+    "end_char": 100,
+    "label": "TOPONYM",
+    "text": "Bart"
+   }
+  ],
+  "spaCy trf + gazetteers": [
+   {
+    "start_char": 13,
+    "end_char": 20,
+    "label": "TOPONYM",
+    "text": "Penrith"
+   },
+   {
+    "start_char": 41,
+    "end_char": 46,
+    "label": "TOPONYM",
+    "text": "Shapp"
+   },
+   {
+    "start_char": 59,
+    "end_char": 63,
+    "label": "TOPONYM",
+    "text": "Hall"
+   }
+  ],
+  "Qwen 3.5 27B (open weight)": [
+   {
+    "start_char": 13,
+    "end_char": 20,
+    "label": "TOPONYM",
+    "text": "Penrith"
+   },
+   {
+    "start_char": 41,
+    "end_char": 46,
+    "label": "TOPONYM",
+    "text": "Shapp"
+   },
+   {
+    "start_char": 51,
+    "end_char": 63,
+    "label": "TOPONYM",
+    "text": "Lowther Hall"
+   }
+  ],
+  "GPT-5.6-sol": [
+   {
+    "start_char": 13,
+    "end_char": 20,
+    "label": "TOPONYM",
+    "text": "Penrith"
+   },
+   {
+    "start_char": 41,
+    "end_char": 46,
+    "label": "TOPONYM",
+    "text": "Shapp"
+   },
+   {
+    "start_char": 51,
+    "end_char": 63,
+    "label": "TOPONYM",
+    "text": "Lowther Hall"
+   }
+  ],
+  "Claude Opus 5": [
+   {
+    "start_char": 13,
+    "end_char": 20,
+    "label": "TOPONYM",
+    "text": "Penrith"
+   },
+   {
+    "start_char": 41,
+    "end_char": 46,
+    "label": "TOPONYM",
+    "text": "Shapp"
+   },
+   {
+    "start_char": 51,
+    "end_char": 63,
+    "label": "TOPONYM",
+    "text": "Lowther Hall"
+   }
+  ],
+  "Gemini 2.5 Pro": [
+   {
+    "start_char": 13,
+    "end_char": 20,
+    "label": "TOPONYM",
+    "text": "Penrith"
+   },
+   {
+    "start_char": 51,
+    "end_char": 63,
+    "label": "TOPONYM",
+    "text": "Lowther Hall"
+   }
+  ]
+ },
+ "_layer_counts": [
+  {
+   "voter": "BERT NER (2019, pinned)",
+   "DISTANCE": 0,
+   "GEONOUN": 0,
+   "RELATION": 0,
+   "TIME": 0,
+   "TOPONYM": 712,
+   "total": 712
+  },
+  {
+   "voter": "spaCy trf + gazetteers",
+   "DISTANCE": 0,
+   "GEONOUN": 1217,
+   "RELATION": 0,
+   "TIME": 52,
+   "TOPONYM": 532,
+   "total": 1801
+  },
+  {
+   "voter": "Qwen 3.5 27B (open weight)",
+   "DISTANCE": 91,
+   "GEONOUN": 329,
+   "RELATION": 507,
+   "TIME": 50,
+   "TOPONYM": 620,
+   "total": 1597
+  },
+  {
+   "voter": "GPT-5.6-sol",
+   "DISTANCE": 97,
+   "GEONOUN": 616,
+   "RELATION": 624,
+   "TIME": 157,
+   "TOPONYM": 531,
+   "total": 2025
+  },
+  {
+   "voter": "Claude Opus 5",
+   "DISTANCE": 99,
+   "GEONOUN": 824,
+   "RELATION": 720,
+   "TIME": 165,
+   "TOPONYM": 776,
+   "total": 2584
+  },
+  {
+   "voter": "Gemini 2.5 Pro",
+   "DISTANCE": 115,
+   "GEONOUN": 845,
+   "RELATION": 1063,
+   "TIME": 136,
+   "TOPONYM": 768,
+   "total": 2927
+  }
+ ],
+ "_results": [
+  {
+   "system": "BERT NER (2019, pinned)",
+   "P": 0.7374,
+   "R": 0.6654,
+   "F1": 0.6995,
+   "95% CI": "[0.655, 0.742]",
+   "F1 (overlap)": 0.8115,
+   "ms/passage": 89.8
+  },
+  {
+   "system": "spaCy trf + gazetteers",
+   "P": 0.8233,
+   "R": 0.5551,
+   "F1": 0.6631,
+   "95% CI": "[0.616, 0.704]",
+   "F1 (overlap)": 0.7298,
+   "ms/passage": 105.0
+  },
+  {
+   "system": "Qwen 3.5 27B (open weight)",
+   "P": 0.8355,
+   "R": 0.6565,
+   "F1": 0.7353,
+   "95% CI": "[0.694, 0.775]",
+   "F1 (overlap)": 0.8545,
+   "ms/passage": 21979.8
+  },
+  {
+   "system": "GPT-5.6-sol",
+   "P": 0.855,
+   "R": 0.5754,
+   "F1": 0.6879,
+   "95% CI": "[0.633, 0.738]",
+   "F1 (overlap)": 0.7742,
+   "ms/passage": 15489.4
+  },
+  {
+   "system": "Claude Opus 5",
+   "P": 0.7964,
+   "R": 0.7833,
+   "F1": 0.7898,
+   "95% CI": "[0.755, 0.824]",
+   "F1 (overlap)": 0.9521,
+   "ms/passage": 5675.3
+  },
+  {
+   "system": "Gemini 2.5 Pro",
+   "P": 0.8164,
+   "R": 0.7947,
+   "F1": 0.8054,
+   "95% CI": "[0.772, 0.836]",
+   "F1 (overlap)": 0.9416,
+   "ms/passage": 22669.7
+  }
+ ],
+ "_meta": {
+  "n_passages": 399,
+  "n_gold_spans": 789,
+  "n_negative_passages": 60,
+  "layer_shown": "TOPONYM",
+  "note": "Real outputs from the LD80 panel run. Scored against the <cdplace> human gold standard, binary span detection."
+ }
+}

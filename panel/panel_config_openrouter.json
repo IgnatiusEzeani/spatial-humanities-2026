@@ -1,0 +1,86 @@
+{
+  "prompt_version": "sh2026-panel-v2",
+  "run_id": "panel_v1_openrouter",
+  "voters": [
+    {
+      "name": "gpt_5_6_sol",
+      "provider": "openrouter",
+      "model": "openai/gpt-5.6-sol",
+      "revision": "openai/gpt-5.6-sol; provider=OpenAI; params=seed_only; via=openrouter; probed=2026-09-15",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "only": [
+        "openai"
+      ],
+      "allow_fallbacks": false
+    },
+    {
+      "name": "claude",
+      "provider": "openrouter",
+      "model": "anthropic/claude-opus-5",
+      "revision": "anthropic/claude-opus-5; provider=Anthropic; params=neither; via=openrouter; probed=2026-09-15",
+      "temperature": "null",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "only": [
+        "anthropic"
+      ],
+      "allow_fallbacks": false
+    },
+    {
+      "name": "gemini_2_5",
+      "provider": "openrouter",
+      "model": "google/gemini-2.5-pro",
+      "revision": "google/gemini-2.5-pro; provider=Google; params=seed+temperature; via=openrouter; probed=2026-09-15",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "only": [
+        "google-vertex"
+      ],
+      "allow_fallbacks": false
+    },
+    {
+      "name": "qwen_large",
+      "provider": "openrouter",
+      "model": "qwen/qwen3.5-27b",
+      "revision": "qwen/qwen3.5-27b; provider=Novita; params=seed+temperature; quant=fp16|bf16; via=openrouter; probed=2026-09-15",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "quantizations": [
+        "fp16",
+        "bf16"
+      ],
+      "allow_fallbacks": false
+    },
+    {
+      "name": "small_open",
+      "provider": "openrouter",
+      "model": "qwen/qwen3.5-9b",
+      "revision": "qwen/qwen3.5-9b; provider=Parasail; params=seed+temperature; quant=fp16|bf16; via=openrouter; probed=2026-09-15",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "enabled": false,
+      "quantizations": [
+        "fp16",
+        "bf16"
+      ],
+      "allow_fallbacks": false
+    }
+  ],
+  "non_generative": {
+    "rules": {
+      "import": "spatio_textual.rules:RuleGazetteerAnnotator",
+      "kwargs": {
+        "gazetteer_path": "gazetteer_rules.csv",
+        "link_places": false
+      },
+      "revision": "resources_v2.1_layered_6305"
+    },
+    "hf_ner": {
+      "model_id": "dslim/bert-base-NER",
+      "revision": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc"
+    },
+    "spacy_hybrid": {
+      "model": "en_core_web_trf",
+      "gazetteer_json": "gazetteer_layered.json"
+    },
+    "spacy_bare": {
+      "model": "en_core_web_trf"
+    }
+  }
+}
