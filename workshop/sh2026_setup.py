@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import time
@@ -99,11 +100,34 @@ def setup(fast_mode: bool = True, quiet: bool = False, extras: str = "") -> Cont
     repo = _find_repo()
     if repo is None:
         repo = root / "spatial-humanities-2026"
-        print(f"Cloning {REF} ... this takes about 30 seconds.")
-        subprocess.run(
-            ["git", "clone", "--depth", "1", "--branch", REF, REPO_URL, str(repo)],
-            check=True,
-        )
+        if repo.exists():
+            # A previous attempt left a partial checkout. `git clone` refuses to
+            # write into a non-empty directory and fails with exit 128, which
+            # looks like an auth or network problem and is neither. Re-runs must
+            # be safe: a participant whose first attempt failed will press play
+            # again, and telling them to delete the runtime is not a workshop.
+            if (repo / ".git").is_dir():
+                print("Found a partial checkout. Updating it instead of cloning.")
+                subprocess.run(["git", "-C", str(repo), "fetch", "--depth", "1",
+                                "origin", REF], check=False)
+                subprocess.run(["git", "-C", str(repo), "checkout", "-f",
+                                "FETCH_HEAD"], check=False)
+            else:
+                print("Removing an incomplete download and starting again.")
+                shutil.rmtree(repo, ignore_errors=True)
+        if not (repo / ".git").is_dir():
+            print(f"Cloning {REF} ... this takes about 30 seconds.")
+            proc = subprocess.run(
+                ["git", "clone", "--depth", "1", "--branch", REF,
+                 REPO_URL, str(repo)],
+                capture_output=True, text=True)
+            if proc.returncode != 0:
+                raise RuntimeError(
+                    "Could not clone the workshop repository.\n"
+                    f"  branch : {REF}\n  url    : {REPO_URL}\n"
+                    f"  git said: {(proc.stderr or '').strip().splitlines()[-1:] }\n"
+                    "If this says the branch was not found, REF is set to a tag "
+                    "or branch that does not exist yet.")
     else:
         print(f"Reusing existing checkout at {repo}")
 
