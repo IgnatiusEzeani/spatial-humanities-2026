@@ -14,7 +14,7 @@ The central progression is:
 
 `manual reading -> deterministic rules -> contextual NLP -> resolution -> affect/events -> evidence-first LLM extraction -> adjudication -> mapping -> responsible Spatial AI`
 
-At every stage ask the same questions:
+At every stage, ask the same questions:
 
 1. What can this method represent?
 2. What does it miss?
@@ -42,7 +42,7 @@ Recommended participant preparation email, 48–72 hours before the workshop:
 - use a modern browser;
 - have access to a Google account if they intend to use Colab;
 - no API key is required;
-- optional advanced participants may use their own provider credentials through documented secret handling, but this is not necessary for completing the workshop.
+- optional: advanced participants may use their own provider credentials through documented secret handling, but this is not necessary for completing the workshop.
 
 ## 3. Instructor preparation checklist
 
@@ -308,7 +308,7 @@ Treat this as a teaching opportunity. Inspect candidate metadata and ambiguity r
 
 ### Notebook re-run produces state/path errors
 
-Reset to a fresh runtime while noting the failure for the release audit. Before final release all notebook setup cells must be re-run-safe.
+Reset to a fresh runtime while noting the failure for the release audit. Before final release, all notebook setup cells must be re-run-safe.
 
 ### Participant asks for a single “best” method
 

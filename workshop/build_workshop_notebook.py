@@ -45,14 +45,27 @@ TAG = "sh2026-workshop-v1.0"
 cells: list[dict] = []
 
 
+def _lines(text: str) -> list[str]:
+    """Split into nbformat's `source` form: EVERY line keeps its newline except
+    the last one.
+
+    `text.split("\n")` looks right and is wrong. A notebook reader reconstructs
+    a cell with "".join(source), so without the newlines every cell collapses to
+    a single line: markdown stops rendering and code stops parsing. Validating
+    with "\n".join() hides it completely, which is how 487 broken lines got
+    past a syntax check.
+    """
+    return text.rstrip().splitlines(keepends=True)
+
+
 def md(text: str) -> None:
     cells.append({"cell_type": "markdown", "metadata": {},
-                  "source": text.rstrip().split("\n")})
+                  "source": _lines(text)})
 
 
 def code(text: str) -> None:
     cells.append({"cell_type": "code", "metadata": {}, "execution_count": None,
-                  "outputs": [], "source": text.rstrip().split("\n")})
+                  "outputs": [], "source": _lines(text)})
 
 
 def guide(what: str, why: str, see: str, tweak: str | None = None) -> None:
