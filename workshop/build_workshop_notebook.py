@@ -151,6 +151,43 @@ PASSAGES = {{p["passage_id"]: p for p in
 PANEL = json.load(open(ctx.data / "panel_cache.json"))
 print(f"{{len(PASSAGES)}} passages loaded, with the human gold standard attached.")""")
 
+    guide("Checks that everything the morning needs actually arrived.",
+          "The cell above can finish without error and still leave something "
+          "missing. Better to find out now, with fifteen minutes in hand, than "
+          "at half past eleven.",
+          "Six lines, all saying OK. If any says MISSING, put your hand up: it "
+          "is a two-minute fix now and a lost block later.")
+    code("""import importlib
+
+NEEDED = {
+    "spatio_textual":            "the annotation library",
+    "spatio_textual.journeys":   "journey extraction, Block 4",
+    "workshop_support.display":  "highlighted text, every block",
+    "workshop_support.clients":  "the teaching models, Block 4",
+    "spacy":                     "the NER pipeline, Block 3",
+    "ipywidgets":                "the annotation widget, Block 1",
+}
+
+missing = []
+for module, why in NEEDED.items():
+    try:
+        importlib.import_module(module)
+        print(f"  OK       {module:28s} {why}")
+    except Exception as exc:
+        missing.append(module)
+        print(f"  MISSING  {module:28s} {why}")
+        print(f"           -> {type(exc).__name__}: {exc}")
+
+if missing:
+    print()
+    print(f"  {len(missing)} missing. Put your hand up.")
+    print("  Blocks 1 to 3 still work without spatio_textual;"
+          " only Block 4 needs it.")
+else:
+    print()
+    print("  Everything is here. Nothing else in this notebook"
+          " touches the internet.")""")
+
     md("""## What this workshop is about
 
 Here is a sentence from a guide to the English Lakes, published in 1859.
