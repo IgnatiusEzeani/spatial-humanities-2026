@@ -13,6 +13,10 @@ The ten notebooks currently contain five different setup cells:
   05            three-way check                     + pip install -e .
   08            clone -> ./spatio-textual          + pip install -e .[app]
 
+NOTE: four of those run `pip install -e .`, which CANNOT work: this repository
+has no pyproject.toml and no setup.py. It is a materials repo, not a package.
+Installation goes through the requirements files.
+
 Consequences:
   * different dependency sets between notebooks;
   * `repo_dir` exists in 00-03 but not in 04-09, so data paths diverge;
@@ -38,10 +42,12 @@ import sys
 import time
 from dataclasses import dataclass
 
-REPO_URL = "https://github.com/IgnatiusEzeani/spatio-textual.git"
+REPO_URL = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
 
 # Pin a TAG for the workshop, not a branch. A branch can move under a
 # participant mid-session; a tag cannot. Freeze this after the release gates pass.
+# Set to the TAG once it is cut; the working branch until then. Whatever this
+# says is what Colab clones, so a local edit does nothing until it is pushed.
 REF = "sh2026-workshop"
 
 COLAB_ROOT = pathlib.Path("/content")
@@ -62,7 +68,11 @@ def _in_colab() -> bool:
 
 
 def _looks_like_repo(p: pathlib.Path) -> bool:
-    return (p / "spatio_textual").exists() and (p / "projects" / "sh2026").exists()
+    # The workshop moved from spatio-textual into its own repo, and this check
+    # was still looking for the OLD layout (a spatio_textual/ package plus
+    # projects/sh2026/). It therefore never recognised an existing checkout,
+    # re-cloned every time, and then put a non-existent directory on sys.path.
+    return (p / "workshop").is_dir() and (p / "workshop_support").is_dir()
 
 
 def _find_repo() -> pathlib.Path | None:
@@ -79,15 +89,16 @@ def setup(fast_mode: bool = True, quiet: bool = False, extras: str = "") -> Cont
 
     fast_mode : True keeps the CPU-only route with precomputed transformer/LLM
                 outputs. Set False only for the optional heavyweight route.
-    extras    : e.g. "app" for notebook 08's folium dependency, or
-                "transformers" when fast_mode is False.
+    extras    : which requirements file to install. "core" (default) is
+                requirements-lite.txt; "app" adds the demo dependencies,
+                "transformers" the heavyweight route, "llm" the API clients.
     """
     t0 = time.time()
     root = COLAB_ROOT if _in_colab() else pathlib.Path.cwd()
 
     repo = _find_repo()
     if repo is None:
-        repo = root / "spatio-textual"
+        repo = root / "spatial-humanities-2026"
         print(f"Cloning {REF} ... this takes about 30 seconds.")
         subprocess.run(
             ["git", "clone", "--depth", "1", "--branch", REF, REPO_URL, str(repo)],
@@ -100,16 +111,27 @@ def setup(fast_mode: bool = True, quiet: bool = False, extras: str = "") -> Cont
 
     # Install once per runtime. The marker means re-running this cell, which
     # participants WILL do, costs nothing.
-    marker = repo / ".sh2026_installed"
+    # This repo is NOT an installable package: no pyproject.toml, no setup.py.
+    # `pip install -e .` fails with "does not appear to be a Python project",
+    # which is exactly what happened on a clean machine. Install from the
+    # requirements files instead.
+    REQS = {"core": "requirements-lite.txt",
+            "app": "requirements.txt",
+            "transformers": "requirements-transformers.txt",
+            "llm": "requirements-llm.txt"}
     want = extras or "core"
+    req = repo / REQS.get(want, REQS["core"])
+    marker = repo / ".sh2026_installed"
     if marker.exists() and marker.read_text().strip() == want:
         print("Dependencies already installed in this runtime.")
+    elif not req.exists():
+        print(f"  ! {req.name} not found; skipping install. If imports fail, "
+              f"install by hand.")
     else:
-        target = f".[{extras}]" if extras else "."
-        print(f"Installing {target} ... this takes 1 to 2 minutes. "
+        print(f"Installing from {req.name} ... 1 to 2 minutes. "
               f"Good moment to read the next markdown cell.")
         subprocess.run(
-            [sys.executable, "-m", "pip", "install", "-q", "-e", target],
+            [sys.executable, "-m", "pip", "install", "-q", "-r", str(req)],
             check=True,
         )
         marker.write_text(want)
