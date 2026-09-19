@@ -139,7 +139,7 @@ def setup(fast_mode: bool = True, quiet: bool = False, extras: str = "") -> Cont
     # `pip install -e .` fails with "does not appear to be a Python project",
     # which is exactly what happened on a clean machine. Install from the
     # requirements files instead.
-    REQS = {"core": "requirements-lite.txt",
+    REQS = {"core": "requirements-workshop.txt",
             "app": "requirements.txt",
             "transformers": "requirements-transformers.txt",
             "llm": "requirements-llm.txt"}
