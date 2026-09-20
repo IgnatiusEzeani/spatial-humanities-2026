@@ -1,0 +1,15 @@
+# Minimal set for the 3-hour workshop.
+#
+# Not requirements-lite.txt: that pulls spatio-textual[app], which drags in the
+# Streamlit demo stack. The workshop never opens the demo, and every extra
+# dependency is another way for thirty simultaneous installs to fail on
+# conference wifi.
+#
+# Pinned to the COMMIT behind v0.4.1 in the canonical SpaceTimeNarratives repo,
+# not to the tag and not to the personal fork. A tag can be repointed; a fork
+# drifts. v0.4.0 in the fork resolved to a commit pip could not check out.
+spatio-textual @ git+https://github.com/SpaceTimeNarratives/spatio-textual.git@e956aac85c92a21bdd2bfbe1568c3122d80f7209
+spacy>=3.8
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+pandas>=2
+ipywidgets>=8
