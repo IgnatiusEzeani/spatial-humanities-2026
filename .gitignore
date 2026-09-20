@@ -20,3 +20,8 @@ panel/stratum_C_passages.txt
 panel/queue_*.jsonl
 panel/.sh2026_installed
 *:Zone.Identifier
+
+# wget writes sh2026_setup.py.1, .2, ... on every notebook run
+sh2026_setup.py.*
+/sh2026_setup.py
+.sh2026_installed
