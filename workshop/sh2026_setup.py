@@ -67,6 +67,11 @@ class Context:
     commit: str
     elapsed_s: float
 
+    @property
+    def project(self) -> pathlib.Path:
+        """Backwards-compatible repository path used by the self-study notebooks."""
+        return self.repo
+
 
 def _in_colab() -> bool:
     return "google.colab" in sys.modules or COLAB_ROOT.exists()

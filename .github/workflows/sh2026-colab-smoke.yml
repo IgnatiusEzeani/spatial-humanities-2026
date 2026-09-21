@@ -51,23 +51,27 @@ jobs:
             workshop/full_day/07_compare_and_adjudicate.ipynb
             workshop/full_day/08_from_text_to_map.ipynb
             workshop/full_day/09_responsible_spatial_ai.ipynb
+            workshop/SH2026_workshop.ipynb
           )
           for nb in "${notebooks[@]}"; do
             name="$(basename "$nb" .ipynb)"
+            ci_notebook=".sh2026-ci-${name}.ipynb"
+            cp "$nb" "$ci_notebook"
             echo "=== Executing $nb ==="
             jupyter nbconvert \
               --to notebook \
-              --execute "$nb" \
+              --execute "$ci_notebook" \
               --ExecutePreprocessor.timeout=300 \
               --ExecutePreprocessor.kernel_name=python3 \
               --output "${name}.executed.ipynb" \
               --output-dir sh2026_outputs/notebook_smoke
+            rm -f "$ci_notebook"
           done
 
-      - name: Verify all ten executed notebooks exist
+      - name: Verify all eleven executed notebooks exist
         run: |
           count=$(find sh2026_outputs/notebook_smoke -maxdepth 1 -name '*.executed.ipynb' | wc -l)
-          test "$count" -eq 10
+          test "$count" -eq 11
           echo "Executed notebook count: $count"
 
       - name: Upload executed notebooks for audit
