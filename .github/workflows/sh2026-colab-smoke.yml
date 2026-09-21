@@ -41,6 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           notebooks=(
+            workshop/SH2026_workshop.ipynb
             workshop/full_day/00_setup_and_orientation.ipynb
             workshop/full_day/01_manual_annotation.ipynb
             workshop/full_day/02_rules_and_gazetteers.ipynb
@@ -64,10 +65,10 @@ jobs:
               --output-dir sh2026_outputs/notebook_smoke
           done
 
-      - name: Verify all ten executed notebooks exist
+      - name: Verify all eleven executed notebooks exist
         run: |
           count=$(find sh2026_outputs/notebook_smoke -maxdepth 1 -name '*.executed.ipynb' | wc -l)
-          test "$count" -eq 10
+          test "$count" -eq 11
           echo "Executed notebook count: $count"
 
       - name: Upload executed notebooks for audit
