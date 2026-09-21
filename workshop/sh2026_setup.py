@@ -49,7 +49,7 @@ REPO_URL = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
 # participant mid-session; a tag cannot. Freeze this after the release gates pass.
 # Set to the TAG once it is cut; the working branch until then. Whatever this
 # says is what Colab clones, so a local edit does nothing until it is pushed.
-REF = "sh2026-workshop"
+REF = "main"
 
 COLAB_ROOT = pathlib.Path("/content")
 
