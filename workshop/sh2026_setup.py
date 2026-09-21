@@ -26,7 +26,7 @@ Consequences:
 
 Usage in every notebook, as the first code cell:
 
-    !wget -q https://raw.githubusercontent.com/IgnatiusEzeani/spatio-textual/<TAG>/projects/sh2026/workshop/sh2026_setup.py
+    !wget -q https://raw.githubusercontent.com/IgnatiusEzeani/spatio-textual/<TAG>/workshop/sh2026_setup.py
     import sh2026_setup as sh
     ctx = sh.setup()
 
@@ -51,6 +51,10 @@ REPO_URL = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
 # says is what Colab clones, so a local edit does nothing until it is pushed.
 REF = "main"
 
+# The spatio-textual release this workshop is pinned to, in requirements-workshop.txt.
+# tests/test_workshop_support.py asserts the installed version matches it.
+PACKAGE_VERSION = "0.4.1"
+
 COLAB_ROOT = pathlib.Path("/content")
 
 
@@ -71,7 +75,7 @@ def _in_colab() -> bool:
 def _looks_like_repo(p: pathlib.Path) -> bool:
     # The workshop moved from spatio-textual into its own repo, and this check
     # was still looking for the OLD layout (a spatio_textual/ package plus
-    # projects/sh2026/). It therefore never recognised an existing checkout,
+    # ). It therefore never recognised an existing checkout,
     # re-cloned every time, and then put a non-existent directory on sys.path.
     return (p / "workshop").is_dir() and (p / "workshop_support").is_dir()
 

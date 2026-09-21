@@ -50,7 +50,7 @@ print("config validation OK")
 os.unlink(p)
 
 # --- the real config file parses and is fully marked -----------------------
-cfg = json.load(open("panel_config.json"))
+cfg = json.load(open(__import__("pathlib").Path(__file__).parent / "panel_config.json"))
 names = [v["name"] for v in cfg["voters"]]
 assert len(names)==len(set(names)), "duplicate voter names"
 unfilled = [v["name"] for v in cfg["voters"] if v["revision"].startswith("FILL IN")]
