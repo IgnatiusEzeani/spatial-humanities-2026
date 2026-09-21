@@ -41,7 +41,6 @@ jobs:
         run: |
           set -euo pipefail
           notebooks=(
-            workshop/SH2026_workshop.ipynb
             workshop/full_day/00_setup_and_orientation.ipynb
             workshop/full_day/01_manual_annotation.ipynb
             workshop/full_day/02_rules_and_gazetteers.ipynb
@@ -52,17 +51,21 @@ jobs:
             workshop/full_day/07_compare_and_adjudicate.ipynb
             workshop/full_day/08_from_text_to_map.ipynb
             workshop/full_day/09_responsible_spatial_ai.ipynb
+            workshop/SH2026_workshop.ipynb
           )
           for nb in "${notebooks[@]}"; do
             name="$(basename "$nb" .ipynb)"
+            ci_notebook=".sh2026-ci-${name}.ipynb"
+            cp "$nb" "$ci_notebook"
             echo "=== Executing $nb ==="
             jupyter nbconvert \
               --to notebook \
-              --execute "$nb" \
+              --execute "$ci_notebook" \
               --ExecutePreprocessor.timeout=300 \
               --ExecutePreprocessor.kernel_name=python3 \
               --output "${name}.executed.ipynb" \
               --output-dir sh2026_outputs/notebook_smoke
+            rm -f "$ci_notebook"
           done
 
       - name: Verify all eleven executed notebooks exist
