@@ -1,0 +1,264 @@
+{
+  "fingerprint": "8a278e0f2bef4005",
+  "rows": [
+    {
+      "voter": "gpt_5_6_sol",
+      "revision": "openai/gpt-5.6-sol; provider=OpenAI; params=seed_only; via=openrouter; probed=2026-09-15",
+      "status": "WARN",
+      "elapsed_s": 8.409,
+      "spans": [
+        {
+          "text": "From Penrith",
+          "label": "RELATION"
+        },
+        {
+          "text": "roads",
+          "label": "GEONOUN"
+        },
+        {
+          "text": "to Pooley Bridge",
+          "label": "RELATION"
+        },
+        {
+          "text": "about six miles distant",
+          "label": "DISTANCE"
+        },
+        {
+          "text": "spans the Eamont",
+          "label": "RELATION"
+        },
+        {
+          "text": "at its issue from Ulleswater",
+          "label": "RELATION"
+        }
+      ],
+      "ungrounded": [
+        {
+          "voter": "gpt_5_6_sol",
+          "reason": "repeated_and_exhausted",
+          "quote": "Penrith",
+          "label": "TOPONYM"
+        },
+        {
+          "voter": "gpt_5_6_sol",
+          "reason": "repeated_and_exhausted",
+          "quote": "Pooley Bridge",
+          "label": "TOPONYM"
+        },
+        {
+          "voter": "gpt_5_6_sol",
+          "reason": "repeated_and_exhausted",
+          "quote": "Eamont",
+          "label": "TOPONYM"
+        },
+        {
+          "voter": "gpt_5_6_sol",
+          "reason": "repeated_and_exhausted",
+          "quote": "issue",
+          "label": "GEONOUN"
+        },
+        {
+          "voter": "gpt_5_6_sol",
+          "reason": "repeated_and_exhausted",
+          "quote": "Ulleswater",
+          "label": "TOPONYM"
+        }
+      ],
+      "structured_mode": "json_schema"
+    },
+    {
+      "voter": "claude",
+      "revision": "anthropic/claude-opus-5; provider=Anthropic; params=neither; via=openrouter; probed=2026-09-15",
+      "status": "WARN",
+      "elapsed_s": 7.717,
+      "spans": [
+        {
+          "text": "From Penrith",
+          "label": "RELATION"
+        },
+        {
+          "text": "two roads",
+          "label": "GEONOUN"
+        },
+        {
+          "text": "lead to Pooley Bridge",
+          "label": "RELATION"
+        },
+        {
+          "text": "about six miles distant",
+          "label": "DISTANCE"
+        },
+        {
+          "text": "the Eamont",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "just at its issue from Ulleswater",
+          "label": "RELATION"
+        }
+      ],
+      "ungrounded": [
+        {
+          "voter": "claude",
+          "reason": "repeated_and_exhausted",
+          "quote": "Penrith",
+          "label": "TOPONYM"
+        },
+        {
+          "voter": "claude",
+          "reason": "repeated_and_exhausted",
+          "quote": "Pooley Bridge",
+          "label": "TOPONYM"
+        },
+        {
+          "voter": "claude",
+          "reason": "repeated_and_exhausted",
+          "quote": "Ulleswater",
+          "label": "TOPONYM"
+        }
+      ],
+      "structured_mode": "json_schema"
+    },
+    {
+      "voter": "gemini_2_5",
+      "revision": "google/gemini-2.5-pro; provider=Google; params=seed+temperature; via=openrouter; probed=2026-09-15",
+      "status": "ok",
+      "elapsed_s": 27.59,
+      "spans": [
+        {
+          "text": "From",
+          "label": "RELATION"
+        },
+        {
+          "text": "Penrith",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "roads",
+          "label": "GEONOUN"
+        },
+        {
+          "text": "to",
+          "label": "RELATION"
+        },
+        {
+          "text": "Pooley Bridge",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "about six miles distant",
+          "label": "DISTANCE"
+        },
+        {
+          "text": "spans",
+          "label": "RELATION"
+        },
+        {
+          "text": "Eamont",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "at",
+          "label": "RELATION"
+        },
+        {
+          "text": "issue",
+          "label": "GEONOUN"
+        },
+        {
+          "text": "from",
+          "label": "RELATION"
+        },
+        {
+          "text": "Ulleswater",
+          "label": "TOPONYM"
+        }
+      ],
+      "ungrounded": [],
+      "structured_mode": "json_schema"
+    },
+    {
+      "voter": "qwen_large",
+      "revision": "qwen/qwen3.5-27b; provider=Novita; params=seed+temperature; quant=fp16|bf16; via=openrouter; probed=2026-09-15",
+      "status": "ok",
+      "elapsed_s": 5.903,
+      "spans": [
+        {
+          "text": "Penrith",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "Pooley Bridge",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "about six miles distant",
+          "label": "DISTANCE"
+        },
+        {
+          "text": "the Eamont",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "Ulleswater",
+          "label": "TOPONYM"
+        }
+      ],
+      "ungrounded": [],
+      "structured_mode": "json_object"
+    },
+    {
+      "voter": "small_open",
+      "revision": "qwen/qwen3.5-9b; provider=Parasail; params=seed+temperature; quant=fp16|bf16; via=openrouter; probed=2026-09-15",
+      "status": "WARN",
+      "elapsed_s": 30914.36,
+      "spans": [
+        {
+          "text": "two roads",
+          "label": "GEONOUN"
+        },
+        {
+          "text": "From Penrith",
+          "label": "RELATION"
+        },
+        {
+          "text": "Pooley Bridge",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "about six miles distant",
+          "label": "DISTANCE"
+        },
+        {
+          "text": "the Eamont",
+          "label": "TOPONYM"
+        },
+        {
+          "text": "from Ulleswater",
+          "label": "RELATION"
+        }
+      ],
+      "ungrounded": [
+        {
+          "voter": "small_open",
+          "reason": "repeated_and_exhausted",
+          "quote": "Penrith",
+          "label": "TOPONYM"
+        },
+        {
+          "voter": "small_open",
+          "reason": "repeated_and_exhausted",
+          "quote": "to Pooley Bridge",
+          "label": "RELATION"
+        },
+        {
+          "voter": "small_open",
+          "reason": "repeated_and_exhausted",
+          "quote": "Ulleswater",
+          "label": "TOPONYM"
+        }
+      ],
+      "structured_mode": "json_schema"
+    }
+  ]
+}

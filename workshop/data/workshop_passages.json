@@ -1,0 +1,209 @@
+[
+ {
+  "passage_id": "ld80_long_18c_cf5aec5784",
+  "text": "Returning to Penrith, I took the road to Shapp, by Lowther Hall, the ſeat of Sir James Lowther, Bart.",
+  "author": "Arthur Young",
+  "title": "Six Months' Tour Through the North of England, etc.",
+  "period": "long_18c",
+  "period_raw": "Long Eighteenth Century",
+  "genre": "Travelogue",
+  "year_pub": "1770",
+  "source_file": "Young_cqp_11.xml",
+  "source_start": 65230,
+  "source_end": 65444,
+  "gold_spans": [
+   {
+    "start": 13,
+    "end": 20,
+    "text": "Penrith",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 41,
+    "end": 46,
+    "text": "Shapp",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 51,
+    "end": 63,
+    "text": "Lowther Hall",
+    "label": "TOPONYM",
+    "attrs": {}
+   }
+  ],
+  "stratum": "long_18c/Travelogue/pos"
+ },
+ {
+  "passage_id": "ld80_victorian_6a5160a116",
+  "text": "The whole vale extends almost in a straight line from the head of Derwentwater to the foot of Bassenthwaite Lake, and is connected with Borrowdale on the south, and Thirlmere on the east, while on the west is Newlands Vale.",
+  "author": "Anon.-Nelson (pub.)",
+  "title": "The English Lakes",
+  "period": "victorian",
+  "period_raw": "Victorian Era",
+  "genre": "Guide",
+  "year_pub": "1859",
+  "source_file": "Anon_cqp_66.xml",
+  "source_start": 47185,
+  "source_end": 47503,
+  "gold_spans": [
+   {
+    "start": 66,
+    "end": 78,
+    "text": "Derwentwater",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 94,
+    "end": 112,
+    "text": "Bassenthwaite Lake",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 136,
+    "end": 146,
+    "text": "Borrowdale",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 165,
+    "end": 174,
+    "text": "Thirlmere",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 209,
+    "end": 222,
+    "text": "Newlands Vale",
+    "label": "TOPONYM",
+    "attrs": {}
+   }
+  ],
+  "stratum": "victorian/Guide/pos"
+ },
+ {
+  "passage_id": "ld80_long_18c_e0537eed45",
+  "text": "Aſcending now Naddle-fell to Caſtlerigg, we were ſuddenly charmed by the all-glorious vale of Keſwick and its enchanting environs.",
+  "author": "Stebbing Shaw",
+  "title": "A Tour in 1787, from London to the Western Highlands of Scotland",
+  "period": "long_18c",
+  "period_raw": "Long Eighteenth Century",
+  "genre": "Travelogue",
+  "year_pub": "1788",
+  "source_file": "Shaw_cqp_24.xml",
+  "source_start": 34752,
+  "source_end": 34959,
+  "gold_spans": [
+   {
+    "start": 14,
+    "end": 25,
+    "text": "Naddle-fell",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 29,
+    "end": 39,
+    "text": "Caſtlerigg",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 94,
+    "end": 101,
+    "text": "Keſwick",
+    "label": "TOPONYM",
+    "attrs": {}
+   }
+  ],
+  "stratum": "long_18c/Travelogue/pos"
+ },
+ {
+  "passage_id": "ld80_regency_romantic_4d879b98c6",
+  "text": "From Helvellyn to Keswick was eight miles to Breakfast, After which we took a complete circuit of the Lake going about ten miles, & seeing on our way the Fall of Low-dore.",
+  "author": "John Keats",
+  "title": "Letters to Tom and George Keats",
+  "period": "regency_romantic",
+  "period_raw": "Regency and Romantic Era",
+  "genre": "Epistle",
+  "year_pub": "1883",
+  "source_file": "Keats_cqp_44.xml",
+  "source_start": 16314,
+  "source_end": 16546,
+  "gold_spans": [
+   {
+    "start": 5,
+    "end": 14,
+    "text": "Helvellyn",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 18,
+    "end": 25,
+    "text": "Keswick",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 162,
+    "end": 170,
+    "text": "Low-dore",
+    "label": "TOPONYM",
+    "attrs": {}
+   }
+  ],
+  "stratum": "regency_romantic/Epistle/pos"
+ },
+ {
+  "passage_id": "ld80_victorian_512be44529",
+  "text": "The next day was Sunday, and proved to be the very sweetest day of all the summer — a tender spring-like day, as though May had come back to see how July was getting on.",
+  "author": "Herbert Rix",
+  "title": "Down the Duddon with Wordsworth",
+  "period": "victorian",
+  "period_raw": "Victorian Era",
+  "genre": "Travelogue",
+  "year_pub": "1893",
+  "source_file": "Rix_cqp_78.xml",
+  "source_start": 11427,
+  "source_end": 11615,
+  "gold_spans": [],
+  "stratum": "victorian/Travelogue/neg"
+ },
+ {
+  "passage_id": "ld80_victorian_387e1d9cef",
+  "text": "The main road is rejoined at Southwaite Moss, about four miles from Keswick; but, if the tourist be a pedestrian, he will find a much more agreeable route, by proceeding from this point down the beautiful vale of St.",
+  "author": "Anon.-Nelson (pub.)",
+  "title": "The English Lakes",
+  "period": "victorian",
+  "period_raw": "Victorian Era",
+  "genre": "Guide",
+  "year_pub": "1859",
+  "source_file": "Anon_cqp_66.xml",
+  "source_start": 41574,
+  "source_end": 41837,
+  "gold_spans": [
+   {
+    "start": 29,
+    "end": 44,
+    "text": "Southwaite Moss",
+    "label": "TOPONYM",
+    "attrs": {}
+   },
+   {
+    "start": 68,
+    "end": 75,
+    "text": "Keswick",
+    "label": "TOPONYM",
+    "attrs": {}
+   }
+  ],
+  "stratum": "victorian/Guide/pos"
+ }
+]

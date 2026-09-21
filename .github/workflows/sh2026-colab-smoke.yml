@@ -41,16 +41,16 @@ jobs:
         run: |
           set -euo pipefail
           notebooks=(
-            workshop/00_setup_and_orientation.ipynb
-            workshop/01_manual_annotation.ipynb
-            workshop/02_rules_and_gazetteers.ipynb
-            workshop/03_contextual_ner.ipynb
-            workshop/04_linking_and_ambiguity.ipynb
-            workshop/05_affect_and_events.ipynb
-            workshop/06_llm_structured_extraction.ipynb
-            workshop/07_compare_and_adjudicate.ipynb
-            workshop/08_from_text_to_map.ipynb
-            workshop/09_responsible_spatial_ai.ipynb
+            workshop/full_day/00_setup_and_orientation.ipynb
+            workshop/full_day/01_manual_annotation.ipynb
+            workshop/full_day/02_rules_and_gazetteers.ipynb
+            workshop/full_day/03_contextual_ner.ipynb
+            workshop/full_day/04_linking_and_ambiguity.ipynb
+            workshop/full_day/05_affect_and_events.ipynb
+            workshop/full_day/06_llm_structured_extraction.ipynb
+            workshop/full_day/07_compare_and_adjudicate.ipynb
+            workshop/full_day/08_from_text_to_map.ipynb
+            workshop/full_day/09_responsible_spatial_ai.ipynb
           )
           for nb in "${notebooks[@]}"; do
             name="$(basename "$nb" .ipynb)"

@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_DIR = PROJECT_ROOT / "workshop"
+NOTEBOOK_DIR = PROJECT_ROOT / "workshop" / "full_day"
 EXPECTED = [f"{i:02d}_{name}.ipynb" for i, name in enumerate([
     "setup_and_orientation",
     "manual_annotation",

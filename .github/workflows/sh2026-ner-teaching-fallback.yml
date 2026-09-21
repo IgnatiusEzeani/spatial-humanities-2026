@@ -5,7 +5,7 @@ on:
   pull_request:
     paths:
       - "scripts/generate_ner_teaching_fallback.py"
-      - "workshop/03_contextual_ner.ipynb"
+      - "workshop/full_day/03_contextual_ner.ipynb"
       - "workshop/data/gold_reference_v0.1.jsonl"
       - ".github/workflows/sh2026-ner-teaching-fallback.yml"
 

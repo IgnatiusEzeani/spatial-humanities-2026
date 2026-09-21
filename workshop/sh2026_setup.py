@@ -1,32 +1,70 @@
-"""Canonical setup path for every Spatial Humanities 2026 notebook."""
+"""
+sh2026_setup.py
+---------------
+ONE canonical setup path for every SH2026 workshop notebook.
+
+Why this exists
+---------------
+The ten notebooks currently contain five different setup cells:
+
+  00            clone -> /content/spatio-textual  + pip -r requirements-lite.txt
+  01, 02, 03    cwd-check -> /content/spatio-textual + pip -r requirements-lite.txt
+  04, 06, 07, 09  clone -> ./spatio-textual        + pip install -e .
+  05            three-way check                     + pip install -e .
+  08            clone -> ./spatio-textual          + pip install -e .[app]
+
+NOTE: four of those run `pip install -e .`, which CANNOT work: this repository
+has no pyproject.toml and no setup.py. It is a materials repo, not a package.
+Installation goes through the requirements files.
+
+Consequences:
+  * different dependency sets between notebooks;
+  * `repo_dir` exists in 00-03 but not in 04-09, so data paths diverge;
+  * 04-09 write outputs to a cwd-relative sh2026_outputs/, 01-03 to repo_dir/sh2026_outputs/;
+  * running 04+ in a runtime where 00 already chdir'd clones a NESTED repo;
+  * ten clone+install cycles on shared conference Wi-Fi.
+
+Usage in every notebook, as the first code cell:
+
+    !wget -q https://raw.githubusercontent.com/IgnatiusEzeani/spatio-textual/<TAG>/workshop/sh2026_setup.py
+    import sh2026_setup as sh
+    ctx = sh.setup()
+
+`ctx` gives you: ctx.repo, ctx.data, ctx.outputs, ctx.fast_mode, ctx.commit
+"""
 
 from __future__ import annotations
 
-import importlib.metadata
 import os
 import pathlib
+import shutil
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
 
+REPO_URL = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
 
-WORKSHOP_REPO = "https://github.com/IgnatiusEzeani/spatial-humanities-2026.git"
-WORKSHOP_REF = "main"
-PACKAGE_VERSION = "0.4.0"
-PACKAGE_REF = "v0.4.0"
+# Pin a TAG for the workshop, not a branch. A branch can move under a
+# participant mid-session; a tag cannot. Freeze this after the release gates pass.
+# Set to the TAG once it is cut; the working branch until then. Whatever this
+# says is what Colab clones, so a local edit does nothing until it is pushed.
+REF = "main"
+
+# The spatio-textual release this workshop is pinned to, in requirements-workshop.txt.
+# tests/test_workshop_support.py asserts the installed version matches it.
+PACKAGE_VERSION = "0.4.1"
+
 COLAB_ROOT = pathlib.Path("/content")
 
 
-@dataclass(frozen=True)
+@dataclass
 class Context:
-    project: pathlib.Path
+    repo: pathlib.Path
     data: pathlib.Path
     outputs: pathlib.Path
     fast_mode: bool
-    project_commit: str
-    package_version: str
-    package_ref: str
+    commit: str
     elapsed_s: float
 
 
@@ -34,101 +72,134 @@ def _in_colab() -> bool:
     return "google.colab" in sys.modules or COLAB_ROOT.exists()
 
 
-def _looks_like_project(path: pathlib.Path) -> bool:
-    return (path / "workshop").is_dir() and (path / "demo").is_dir() and (path / "benchmarks").is_dir()
+def _looks_like_repo(p: pathlib.Path) -> bool:
+    # The workshop moved from spatio-textual into its own repo, and this check
+    # was still looking for the OLD layout (a spatio_textual/ package plus
+    # ). It therefore never recognised an existing checkout,
+    # re-cloned every time, and then put a non-existent directory on sys.path.
+    return (p / "workshop").is_dir() and (p / "workshop_support").is_dir()
 
 
-def _find_project() -> pathlib.Path | None:
-    cwd = pathlib.Path.cwd().resolve()
-    candidates = (cwd, *cwd.parents, COLAB_ROOT / "spatial-humanities-2026")
-    return next((path for path in candidates if _looks_like_project(path)), None)
+def _find_repo() -> pathlib.Path | None:
+    """Reuse an existing checkout instead of cloning again."""
+    cwd = pathlib.Path.cwd()
+    for candidate in (cwd, *cwd.parents, COLAB_ROOT / "spatio-textual"):
+        if _looks_like_repo(candidate):
+            return candidate
+    return None
 
 
-def _install(project: pathlib.Path, extras: str) -> None:
-    requirements = {
-        "": "requirements-lite.txt",
-        "app": "requirements-lite.txt",
-        "transformers": "requirements-transformers.txt",
-        "llm": "requirements-llm.txt",
-    }
-    if extras not in requirements:
-        raise ValueError(f"Unsupported workshop dependency set: {extras!r}")
+def setup(fast_mode: bool = True, quiet: bool = False, extras: str = "") -> Context:
+    """Clone (once), install (once), and return stable paths.
 
-    requirement = requirements[extras]
-    marker = project / f".sh2026-installed-{extras or 'lite'}"
-    try:
-        installed = importlib.metadata.version("spatio-textual")
-    except importlib.metadata.PackageNotFoundError:
-        installed = None
-
-    if installed == PACKAGE_VERSION:
-        marker.touch()
-        print(f"Dependencies already installed (spatio-textual {installed}).")
-        return
-
-    print(f"Installing {requirement}; allow about 1–2 minutes in a fresh runtime.")
-    subprocess.run(
-        [sys.executable, "-m", "pip", "install", "-q", "-r", str(project / requirement)],
-        check=True,
-    )
-    installed = importlib.metadata.version("spatio-textual")
-    if installed != PACKAGE_VERSION:
-        raise RuntimeError(
-            f"Expected spatio-textual {PACKAGE_VERSION}, but installed {installed}."
-        )
-    marker.touch()
-
-
-def setup(*, fast_mode: bool = True, extras: str = "", quiet: bool = False) -> Context:
-    """Prepare one workshop checkout and an exactly pinned package dependency."""
-    started = time.perf_counter()
+    fast_mode : True keeps the CPU-only route with precomputed transformer/LLM
+                outputs. Set False only for the optional heavyweight route.
+    extras    : which requirements file to install. "core" (default) is
+                requirements-lite.txt; "app" adds the demo dependencies,
+                "transformers" the heavyweight route, "llm" the API clients.
+    """
+    t0 = time.time()
     root = COLAB_ROOT if _in_colab() else pathlib.Path.cwd()
-    project = _find_project()
-    if project is None:
-        project = root / "spatial-humanities-2026"
-        print(f"Cloning workshop release {WORKSHOP_REF}.")
-        subprocess.run(
-            ["git", "clone", "--depth", "1", "--branch", WORKSHOP_REF, WORKSHOP_REPO, str(project)],
-            check=True,
-        )
+
+    repo = _find_repo()
+    if repo is None:
+        repo = root / "spatial-humanities-2026"
+        if repo.exists():
+            # A previous attempt left a partial checkout. `git clone` refuses to
+            # write into a non-empty directory and fails with exit 128, which
+            # looks like an auth or network problem and is neither. Re-runs must
+            # be safe: a participant whose first attempt failed will press play
+            # again, and telling them to delete the runtime is not a workshop.
+            if (repo / ".git").is_dir():
+                print("Found a partial checkout. Updating it instead of cloning.")
+                subprocess.run(["git", "-C", str(repo), "fetch", "--depth", "1",
+                                "origin", REF], check=False)
+                subprocess.run(["git", "-C", str(repo), "checkout", "-f",
+                                "FETCH_HEAD"], check=False)
+            else:
+                print("Removing an incomplete download and starting again.")
+                shutil.rmtree(repo, ignore_errors=True)
+        if not (repo / ".git").is_dir():
+            print(f"Cloning {REF} ... this takes about 30 seconds.")
+            proc = subprocess.run(
+                ["git", "clone", "--depth", "1", "--branch", REF,
+                 REPO_URL, str(repo)],
+                capture_output=True, text=True)
+            if proc.returncode != 0:
+                raise RuntimeError(
+                    "Could not clone the workshop repository.\n"
+                    f"  branch : {REF}\n  url    : {REPO_URL}\n"
+                    f"  git said: {(proc.stderr or '').strip().splitlines()[-1:] }\n"
+                    "If this says the branch was not found, REF is set to a tag "
+                    "or branch that does not exist yet.")
     else:
-        print(f"Reusing workshop checkout at {project}")
+        print(f"Reusing existing checkout at {repo}")
 
-    os.chdir(project)
-    _install(project, extras)
-    if str(project) not in sys.path:
-        sys.path.insert(0, str(project))
+    os.chdir(repo)
 
-    revision = subprocess.run(
+    # Install once per runtime. The marker means re-running this cell, which
+    # participants WILL do, costs nothing.
+    # This repo is NOT an installable package: no pyproject.toml, no setup.py.
+    # `pip install -e .` fails with "does not appear to be a Python project",
+    # which is exactly what happened on a clean machine. Install from the
+    # requirements files instead.
+    REQS = {"core": "requirements-workshop.txt",
+            "app": "requirements.txt",
+            "transformers": "requirements-transformers.txt",
+            "llm": "requirements-llm.txt"}
+    want = extras or "core"
+    req = repo / REQS.get(want, REQS["core"])
+    marker = repo / ".sh2026_installed"
+    if marker.exists() and marker.read_text().strip() == want:
+        print("Dependencies already installed in this runtime.")
+    elif not req.exists():
+        print(f"  ! {req.name} not found; skipping install. If imports fail, "
+              f"install by hand.")
+    else:
+        print(f"Installing from {req.name} ... 1 to 2 minutes. "
+              f"Good moment to read the next markdown cell.")
+        # Do NOT swallow pip's output. A failed install used to surface as a
+        # bare CalledProcessError with the reason hidden, which is useless in a
+        # room of thirty people. Show what pip actually said, and carry on: a
+        # partial environment is often enough for the first two blocks, and the
+        # instructor can decide rather than the script.
+        proc = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "-r", str(req)],
+            capture_output=True, text=True,
+        )
+        if proc.returncode != 0:
+            tail = (proc.stderr or proc.stdout or "").strip().splitlines()
+            print("\n  ! pip failed. The last lines were:\n")
+            for line in tail[-12:]:
+                print("     ", line)
+            print("\n  Continuing anyway. If an import fails later, this is why.")
+        else:
+            marker.write_text(want)
+
+    commit = subprocess.run(
         ["git", "rev-parse", "--short", "HEAD"],
-        cwd=project,
-        capture_output=True,
-        text=True,
-    )
-    project_commit = revision.stdout.strip() if revision.returncode == 0 else "uncommitted"
-    outputs = project / "sh2026_outputs"
-    for name in ("annotations", "comparisons", "geojson", "figures", "human_review"):
-        (outputs / name).mkdir(parents=True, exist_ok=True)
+        capture_output=True, text=True, cwd=repo,
+    ).stdout.strip()
 
-    ctx = Context(
-        project=project,
-        data=project / "workshop" / "data",
-        outputs=outputs,
-        fast_mode=fast_mode,
-        project_commit=project_commit,
-        package_version=importlib.metadata.version("spatio-textual"),
-        package_ref=PACKAGE_REF,
-        elapsed_s=time.perf_counter() - started,
-    )
+    data = repo / "workshop" / "data"
+    outputs = repo / "sh2026_outputs"
+    for sub in ("annotations", "comparisons", "geojson", "figures", "human_review"):
+        (outputs / sub).mkdir(parents=True, exist_ok=True)
+
+    if str(repo) not in sys.path:
+        sys.path.insert(0, str(repo))
+
+    ctx = Context(repo, data, outputs, fast_mode, commit, time.time() - t0)
+
     if not quiet:
-        route = "CPU only; no API key required" if fast_mode else "optional heavyweight route"
+        route = "CPU only, no API key needed" if fast_mode else "heavyweight route"
         print(
-            f"Ready in {ctx.elapsed_s:.0f}s.\n"
-            f"  workshop commit : {ctx.project_commit}\n"
-            f"  package version  : {ctx.package_version}\n"
-            f"  package ref      : {ctx.package_ref}\n"
-            f"  data             : {ctx.data}\n"
-            f"  outputs          : {ctx.outputs}\n"
-            f"  route            : {route}"
+            f"\nReady in {ctx.elapsed_s:.0f}s."
+            f"\n  repo    : {ctx.repo}"
+            f"\n  commit  : {ctx.commit}"
+            f"\n  data    : {ctx.data}"
+            f"\n  outputs : {ctx.outputs}"
+            f"\n  route   : {route}"
+            f"\n\nIf this cell failed, put your hand up. Do not re-run it more than once."
         )
     return ctx

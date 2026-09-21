@@ -5,7 +5,7 @@ on:
   pull_request:
     paths:
       - "scripts/generate_affect_teaching_fallback.py"
-      - "workshop/05_affect_and_events.ipynb"
+      - "workshop/full_day/05_affect_and_events.ipynb"
       - ".github/workflows/sh2026-affect-teaching-fallback.yml"
 
 permissions:

@@ -1,0 +1,40 @@
+Terms in this layer that may cost precision.
+
+Matching is on WORD BOUNDARIES, so these do not fire inside
+longer words: 'bay' will not match 'Bombay'. The risk is
+polysemy, which no matching rule fixes: 'a bar of soap',
+'the tip of the iceberg', 'a gap in the record'.
+
+Delete the wrong ones from the source list and rebuild.
+
+alp (short and polysemous: has common non-geographic senses)
+bar (short and polysemous: has common non-geographic senses)
+bay (short and polysemous: has common non-geographic senses)
+ben (short and polysemous: has common non-geographic senses)
+bog (short and polysemous: has common non-geographic senses)
+broom (not a geographical feature)
+cathouse (not a geographical feature)
+cay (short and polysemous: has common non-geographic senses)
+dam (short and polysemous: has common non-geographic senses)
+den (short and polysemous: has common non-geographic senses)
+gap (short and polysemous: has common non-geographic senses)
+glazier (not a geographical feature)
+gut (short and polysemous: has common non-geographic senses)
+hut (short and polysemous: has common non-geographic senses)
+inn (short and polysemous: has common non-geographic senses)
+lea (short and polysemous: has common non-geographic senses)
+ley (short and polysemous: has common non-geographic senses)
+liman (person-forming suffix: check)
+mud (short and polysemous: has common non-geographic senses)
+mur (short and polysemous: has common non-geographic senses)
+pit (short and polysemous: has common non-geographic senses)
+plumber (not a geographical feature)
+pub (short and polysemous: has common non-geographic senses)
+roofer (not a geographical feature)
+sea (short and polysemous: has common non-geographic senses)
+second-floor (not a geographical feature)
+spa (short and polysemous: has common non-geographic senses)
+tee (short and polysemous: has common non-geographic senses)
+tip (short and polysemous: has common non-geographic senses)
+tor (short and polysemous: has common non-geographic senses)
+zoo (short and polysemous: has common non-geographic senses)
