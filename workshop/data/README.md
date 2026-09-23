@@ -1,93 +1,99 @@
-# SH2026 Teaching and Reference Data
+# SH2026 teaching and reference data
 
-This directory contains only material intended for the public Spatial Humanities 2026 teaching/demo workflow.
+This directory contains the public data used by the Spatial Humanities 2026
+workshop and demonstrator. It deliberately separates teaching/development
+references, workshop passages and cached system outputs from the frozen
+benchmarks in [`benchmarks/`](../../benchmarks/README.md).
 
-## Files
+## File inventory
 
-### `examples.json`
+| File | Role | Evidence status |
+|---|---|---|
+| `examples.json` | Small historical and synthetic teaching examples | Development/teaching only |
+| `gold_reference_v0.1.jsonl` | Instructor-adjudicated annotations for the teaching examples | Development reference, not held-out evidence |
+| `gold_schema_v0.1.json` | Schema for the teaching reference | Validation support |
+| `workshop_passages.json` | Six CLDW passages used in the three-hour workshop, including one negative passage | Human `<cdplace>` annotations retained for teaching and comparison |
+| `panel_cache.json` | Cached outputs from the LD80 evaluation panel for the workshop passages | Precomputed model output, regenerated from committed panel artefacts |
+| `teaching_gazetteer.csv` | Compact transparent gazetteer used in exercises | Teaching resource, not benchmark evidence |
 
-Small teaching examples used across notebooks and the demo.
+The complete benchmark inventory, including the synthetic held-out sets and
+CLDW external validation, is documented in
+[`benchmarks/README.md`](../../benchmarks/README.md).
 
-Current categories:
+## Provenance and distribution
 
-- Lake District historical travel writing development example;
-- synthetic oral-history Q/A journey;
-- synthetic ambiguous place-resolution example;
-- synthetic historical-polity example;
-- synthetic relational/non-cartographic spatial example.
+### CLDW material
 
-### `gold_reference_v0.1.jsonl`
+The Penrith/Pooley Bridge example is verified against Corpus of Lake District
+Writing record `1857_b`:
 
-Human reference annotations following `docs/GOLD_ANNOTATION_GUIDE.md`.
+> Anon.-Nelson (pub.). *The English Lakes*. London: Thomas Nelson & Sons,
+> 1859, p. 4.
 
-Each JSONL line contains:
+The committed record identifies the upstream path
+`LD80_transcribed/Anon1857_b.xml`, metadata row 66 and source commit
+`9042811cf590f694f9b635c4bc656ed4f81ca422`. Its current status is
+`public_domain_source_verified`; the corresponding gold annotation is an
+`adjudicated_reference`.
 
-- exact source text;
-- source/distribution metadata;
-- span annotations and offsets;
-- relation annotations and evidence;
-- structured journeys where warranted;
-- explicit-vs-inferred field status;
-- adjudication notes.
-
-This is a **teaching/development reference**, not the final keynote holdout benchmark.
-
-## Distribution and provenance rules
+The six workshop passages retain author, title, publication year, source file,
+source offsets and gold `<cdplace>` spans. CLDW-derived material remains subject
+to the upstream
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 licence](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+Cite the corpus and its source repository when reusing it.
 
 ### Synthetic examples
 
-Records whose source note says `Instructor-created synthetic example` are safe to distribute. They must remain clearly labelled synthetic in notebooks, demos and talks. In particular, the synthetic oral-history material must never be presented as an authentic survivor testimony.
+Records labelled `Instructor-created synthetic example` are safe to distribute
+as teaching material. They must remain clearly labelled synthetic. In
+particular, the oral-history-style example is not an authentic survivor
+testimony and must never be presented as one.
 
-### Lake District development example
+### Controlled testimony
 
-The Penrith/Pooley Bridge passage is currently marked:
-
-`public_domain_example_pending_exact_citation`
-
-and the gold record is:
-
-`provisional_until_source_citation_verified`
-
-Before the final public release, verify and add the exact CLDW source/edition citation. Do not remove the provisional flag merely because the text is already used in development materials.
-
-### Controlled Holocaust testimony text
-
-Do **not** add controlled-access testimony transcripts to this directory.
-
+Do not add controlled-access Holocaust testimony transcripts to this directory.
 Use only:
 
-- cleared/publicly distributable excerpts with explicit permission;
-- instructor-created synthetic examples;
-- aggregate/precomputed research outputs that do not reproduce controlled text.
+- material explicitly cleared for public redistribution;
+- instructor-created synthetic examples; or
+- aggregate or precomputed research outputs that do not reproduce controlled
+  transcript text.
 
-## Validation
+## Evidence boundaries
 
-The package provides lightweight validation/scoring helpers in:
+The teaching reference influenced notebook design, rules, examples and prompts.
+It is therefore development material, not an unbiased benchmark.
 
-`spatio_textual.gold`
+For formal claims:
 
-The CI test `tests/test_gold_reference.py` verifies, among other things:
+- use the frozen datasets described in
+  [`benchmarks/README.md`](../../benchmarks/README.md);
+- keep synthetic and source-derived evaluation results separately labelled;
+- do not tune on held-out data while continuing to describe it as held out; and
+- do not generalise the CLDW checks directly to Holocaust survivor testimony or
+  another historical corpus.
 
-- source-offset integrity;
-- evidence quotation integrity;
-- unique IDs;
-- explicit/inferred/missing journey status;
-- review requirements for contextual inference;
-- preservation of the historical `Czechoslovakia` source form;
-- the distinction between textual recognition and ambiguous resolution;
-- exact vs overlap span scoring behaviour.
+The annotation policy is
+[`docs/GOLD_ANNOTATION_GUIDE.md`](../../docs/GOLD_ANNOTATION_GUIDE.md), and
+benchmark provenance is documented in
+[`docs/BENCHMARK_PROVENANCE.md`](../../docs/BENCHMARK_PROVENANCE.md).
 
-## Benchmark-development rule
+## Reproducibility
 
-Do not repeatedly tune every rule/prompt/model against all reference examples and then describe performance on the same examples as an unbiased benchmark.
+The panel cache is rebuilt from committed panel results without an API key:
 
-For the final keynote experiment, create a second independently annotated set and partition it into at least:
+```bash
+python workshop/tools/make_workshop_cache.py \
+  --panel panel/panel_panel_v1_openrouter.jsonl \
+  --results panel/results_snapshot_v2.json \
+  --passages workshop/data/workshop_passages.json \
+  --out workshop/data/panel_cache.json
+```
 
-- a visible teaching/development set;
-- a final held-out comparison set that is frozen before the last prompt/rule tuning.
+CI verifies that this command reproduces the committed cache byte-for-byte and
+also validates source offsets, evidence quotations, identifiers and structured
+journey fields.
 
-## Versioning
-
-Current reference schema: `spatio-textual-gold-0.1`
-
-If annotation policy changes in a way that affects labels, boundaries, relation semantics or journey-field interpretation, update the version and document the change in `docs/GOLD_ANNOTATION_GUIDE.md`.
+Current teaching-reference schema: `spatio-textual-gold-0.1`. Any change to
+labels, boundaries, relation semantics or journey-field interpretation requires
+a version update and corresponding annotation-policy revision.
