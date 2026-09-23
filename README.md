@@ -52,6 +52,12 @@ Oral-history examples are synthetic, and included Corpus of Lake District
 Writing passages carry source information. Review the
 [data notes](workshop/data/README.md) before reusing or extending the materials.
 
+## Licensing and reuse
+
+This repository contains original, co-authored and third-party material under
+different terms. See [the licensing and reuse notice](LICENSING.md) before
+redistributing code, data, annotations or teaching materials.
+
 ## Acknowledgements
 
 This work builds on the ESRC-funded Spatial Narratives project
