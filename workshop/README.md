@@ -34,9 +34,10 @@ compared against its human-annotated gold standard.
 
 ## After the session
 
-Ten longer notebooks cover each topic in more depth, with outputs committed so
-you can check your results when working alone. See
-**[`full_day/`](full_day/README.md)**.
+Ten longer notebooks cover each topic in more depth. GitHub Actions executes
+all ten in a clean, CPU-only environment without API keys, so their default
+paths are continuously checked. Open them in Colab and run the cells to
+generate the outputs. See **[`full_day/`](full_day/README.md)**.
 
 ## Running locally
 

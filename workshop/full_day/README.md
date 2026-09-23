@@ -1,8 +1,9 @@
 # Self-study notebooks
 
-Ten notebooks that extend the three-hour session. Each one runs on its own in
-Colab, needs no API key or GPU, and has **its outputs committed**, so you can
-compare your results against a known-good run.
+Ten notebooks extend the three-hour session. Each one runs independently in
+Colab and needs no API key or GPU. Their saved outputs are intentionally cleared
+to avoid stale or environment-specific artefacts. GitHub Actions executes every
+notebook in a clean, CPU-only, no-key environment to verify the default path.
 
 Take them in order if you are new to the material; each builds on the vocabulary
 of the one before. Allow 30 to 60 minutes each.
